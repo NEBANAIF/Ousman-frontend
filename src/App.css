@@ -182,7 +182,3 @@
     border-right-color: var(--border);
   }
 }
-&::after {
-    right: 0;
-    border-right-color: var(--border);
-  }
