@@ -167,6 +167,36 @@ const FINANCE_CSS = `
     input, select, textarea { font-size: 16px !important; }
   }
 
+  /* Finance mobile: net profit chip stack layout */
+  @media (max-width:767px) {
+    .abk-fin-net-chip {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 6px !important;
+    }
+    .abk-fin-net-chip .abk-fin-net-val {
+      font-size: 18px !important;
+    }
+    .abk-fin-formula-row {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 4px !important;
+    }
+    .abk-fin-formula-row .abk-fin-formula-val {
+      font-size: 16px !important;
+    }
+    .abk-fin-formula-text {
+      font-size: 10px !important;
+      word-break: break-word !important;
+      white-space: normal !important;
+    }
+    /* Full-span grid col reset on mobile */
+    .abk-fin-grid-2 > * { grid-column: 1 !important; }
+    .abk-fin-period-span { grid-column: 1 !important; width: 100% !important; }
+    /* Ensure pad doesn't overflow */
+    .abk-fin-pad { box-sizing: border-box !important; width: 100% !important; }
+  }
+
 `;
 
 /* ── helpers ──────────────────────────────────────────────────────────────── */
@@ -531,24 +561,24 @@ export default function Finance({ dark }) {
           <AlertCircle size={17} style={{ color:'var(--blue)', marginTop:2, flexShrink:0 }} />
           <div style={{ flex:1 }}>
             <div style={{ fontSize:10.5, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.10em', color:'var(--blue)', marginBottom:10 }}>{t('finance.formulaBanner')} · {range.label}</div>
-            <div className="abk-fin-kpi-3" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:8, marginBottom:10 }}>
+            <div className="abk-fin-kpi-3" style={{ display:'grid', gridTemplateColumns:'repeat(3,minmax(0,1fr))', gap:8, marginBottom:10 }}>
               {[
                 { val:`$${fmt(fin.revenue)}`,       label:t('finance.revenueLabel'),  sub:`${periodSales.length} ${t('finance.salesRecorded')}`, color:'var(--green)',    prefix:'' },
                 { val:`$${fmt(fin.cogs)}`,          label:t('finance.cogsLabel'),     sub:t('finance.costTimesQty'),                             color:'var(--amber)',    prefix:'−' },
                 { val:`$${fmt(fin.totalExpenses)}`, label:t('finance.expensesLabel'), sub:`${periodExpenses.length} ${t('finance.expenseCount')}`,color:'var(--red-text)',prefix:'−' },
               ].map(item => (
-                <div key={item.label} style={{ background:'var(--card)', borderRadius:10, padding:'10px 12px', border:'1px solid var(--border-light)' }}>
-                  <div className="abk-serif" style={{ fontSize:16, fontWeight:600, color:item.color }}>{item.prefix}{item.val}</div>
+                <div key={item.label} style={{ background:'var(--card)', borderRadius:10, padding:'10px 12px', border:'1px solid var(--border-light)', minWidth:0, overflow:'hidden' }}>
+                  <div className="abk-serif" style={{ fontSize:16, fontWeight:600, color:item.color, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{item.prefix}{item.val}</div>
                   <div style={{ fontSize:11, color:'var(--ink-light)', marginTop:2, fontWeight:500 }}>{item.label}</div>
                   <div style={{ fontSize:10.5, color:'var(--ink-faint)', fontWeight:300 }}>{item.sub}</div>
                 </div>
               ))}
             </div>
-            <div style={{ background:'var(--card)', border:`2px solid ${fin.netProfit >= 0 ? 'rgba(29,158,117,.4)' : 'var(--red-border)'}`, borderRadius:11, padding:'10px 14px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-              <span style={{ fontSize:12, color:'var(--ink-light)', fontWeight:400 }}>
+            <div style={{ background:'var(--card)', border:`2px solid ${fin.netProfit >= 0 ? 'rgba(29,158,117,.4)' : 'var(--red-border)'}`, borderRadius:11, padding:'10px 14px', display:'flex', alignItems:'center', justifyContent:'space-between' }} className="abk-fin-formula-row">
+              <span className="abk-fin-formula-text" style={{ fontSize:12, color:'var(--ink-light)', fontWeight:400 }}>
                 {t('finance.netProfit')} = ${fmt(fin.revenue)} − ${fmt(fin.cogs)} − ${fmt(fin.totalExpenses)}
               </span>
-              <span className="abk-serif" style={{ fontSize:20, fontWeight:700, color:fin.netProfit>=0 ? 'var(--green)' : 'var(--red-text)' }}>
+              <span className="abk-fin-formula-val abk-serif" style={{ fontSize:20, fontWeight:700, color:fin.netProfit>=0 ? 'var(--green)' : 'var(--red-text)', flexShrink:0, marginLeft:8 }}>
                 {fin.netProfit>=0 ? '+' : '−'}${fmt(fin.netProfit)}
               </span>
             </div>
@@ -614,16 +644,16 @@ export default function Finance({ dark }) {
                 ))}
               </div>
               {/* Net result chip */}
-              <div style={{ marginTop:18, background:fin.netProfit>=0?'var(--green-bg)':'var(--red-bg)', border:`2px solid ${fin.netProfit>=0?'rgba(29,158,117,.35)':'var(--red-border)'}`, borderRadius:11, padding:'12px 14px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                <div>
+              <div className="abk-fin-net-chip" style={{ marginTop:18, background:fin.netProfit>=0?'var(--green-bg)':'var(--red-bg)', border:`2px solid ${fin.netProfit>=0?'rgba(29,158,117,.35)':'var(--red-border)'}`, borderRadius:11, padding:'12px 14px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                <div style={{ minWidth:0 }}>
                   <div style={{ fontSize:12, fontWeight:600, color:fin.netProfit>=0?'var(--green)':'var(--red-text)' }}>
                     {fin.netProfit>=0 ? `✓ ${t('finance.netProfit')}` : `✗ ${t('finance.netLoss')}`}
                   </div>
-                  <div style={{ fontSize:10.5, color:'var(--ink-faint)', fontWeight:300, marginTop:2 }}>
+                  <div className="abk-fin-formula-text" style={{ fontSize:10.5, color:'var(--ink-faint)', fontWeight:300, marginTop:2 }}>
                     ${fmt(fin.revenue)} − ${fmt(fin.cogs)} − ${fmt(fin.totalExpenses)}
                   </div>
                 </div>
-                <div className="abk-serif" style={{ fontSize:22, fontWeight:700, color:fin.netProfit>=0?'var(--green)':'var(--red-text)' }}>
+                <div className="abk-fin-net-val abk-serif" style={{ fontSize:22, fontWeight:700, color:fin.netProfit>=0?'var(--green)':'var(--red-text)', flexShrink:0, marginLeft:8 }}>
                   {fin.netProfit>=0?'+':'−'}${fmt(fin.netProfit)}
                 </div>
               </div>
@@ -655,7 +685,7 @@ export default function Finance({ dark }) {
             </div>
 
             {/* Period comparison table */}
-            <div className="abk-anim-fade-up" style={{ gridColumn:'1 / -1', background:'var(--card)', border:'1px solid var(--border)', borderRadius:16, boxShadow:'0 2px 12px rgba(0,0,0,.06)', animationDelay:'.24s', transition:'background .3s, border-color .3s' }}>
+            <div className="abk-anim-fade-up abk-fin-period-span" style={{ gridColumn:'1 / -1', background:'var(--card)', border:'1px solid var(--border)', borderRadius:16, boxShadow:'0 2px 12px rgba(0,0,0,.06)', animationDelay:'.24s', transition:'background .3s, border-color .3s' }}>
               <div style={{ padding:'12px 16px', borderBottom:'1px solid var(--border-light)', background:'var(--cream-deep)', display:'flex', alignItems:'center', justifyContent:'space-between', borderRadius:'16px 16px 0 0' }}>
                 <div className="abk-serif" style={{ fontSize:14, fontWeight:500, color:'var(--ink)' }}>{t('finance.periodComparison')}</div>
                 <span style={{ fontSize:11, color:'var(--ink-faint)', fontWeight:300 }}>{t('finance.clickRow')}</span>
