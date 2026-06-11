@@ -139,46 +139,14 @@ const SALES_CSS = `
     .abk-sales-header > * { width: 100% !important; }
     .abk-sales-modal-grid { grid-template-columns: 1fr !important; }
 
-    /* ── Stacked card table ── */
+    /* ── Sales table: compact fit — all columns visible, no scroll ── */
     .abk-sales-table-wrap { overflow-x: visible !important; }
-    .abk-sales-table-wrap table { display: block !important; }
-    .abk-sales-table-wrap thead { display: none !important; }
-    .abk-sales-table-wrap tbody { display: flex !important; flex-direction: column !important; gap: 8px !important; padding: 8px !important; }
-    .abk-sales-table-wrap tr {
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      background: var(--card) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 12px !important;
-      overflow: hidden !important;
-      box-shadow: 0 1px 4px rgba(0,0,0,.06) !important;
-    }
-    .abk-sales-table-wrap td {
-      display: flex !important;
-      flex-direction: column !important;
-      padding: 8px 10px !important;
-      border-bottom: 1px solid var(--border-light) !important;
-      font-size: 12px !important;
-    }
-    .abk-sales-table-wrap td::before {
-      content: attr(data-label) !important;
-      font-size: 9px !important;
-      font-weight: 600 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.08em !important;
-      color: var(--ink-faint) !important;
-      margin-bottom: 3px !important;
-    }
-    .abk-sales-table-wrap td.abk-td-actions {
-      grid-column: 1 / -1 !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      justify-content: flex-end !important;
-      border-bottom: none !important;
-    }
-    .abk-sales-table-wrap td.abk-td-actions::before { display: none !important; }
-    .abk-sales-table-wrap td[colspan] { grid-column: 1 / -1 !important; border-bottom: none !important; }
-    .abk-sales-table-wrap td[colspan]::before { display: none !important; }
+    .abk-sales-table-wrap table { width: 100% !important; table-layout: fixed !important; font-size: 10px !important; }
+    .abk-sales-table-wrap th { padding: 6px 4px !important; font-size: 8.5px !important; letter-spacing: 0 !important; white-space: normal !important; word-break: break-word !important; }
+    .abk-sales-table-wrap td { padding: 6px 4px !important; font-size: 10px !important; white-space: normal !important; word-break: break-word !important; line-height: 1.3 !important; }
+    .abk-sales-table-wrap td::before { content: none !important; display: none !important; }
+    .abk-sales-table-wrap .abk-td-actions button { padding: 4px 5px !important; font-size: 9px !important; }
+    .abk-sales-table-wrap .abk-td-actions svg { width: 12px !important; height: 12px !important; }
   }
 
   @media (max-width:480px) {

@@ -149,57 +149,15 @@ const PRODUCTS_CSS = `
     .abk-prod-header > * { width: 100% !important; }
     .abk-prod-modal-grid { grid-template-columns: 1fr !important; }
 
-    /* ── Stacked card table — shows ALL columns, no hiding, no horizontal scroll ── */
+    /* ── Products table: compact fit — all columns visible, no scroll ── */
     .abk-prod-table-wrap { overflow-x: visible !important; }
-    .abk-prod-table-wrap table { display: block !important; }
-    .abk-prod-table-wrap thead { display: none !important; }
-    .abk-prod-table-wrap tbody { display: flex !important; flex-direction: column !important; gap: 8px !important; padding: 8px !important; }
-    .abk-prod-table-wrap tr {
-      display: grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      gap: 0 !important;
-      background: var(--card) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: 12px !important;
-      overflow: hidden !important;
-      box-shadow: 0 1px 4px rgba(0,0,0,.06) !important;
-    }
-    .abk-prod-table-wrap td {
-      display: flex !important;
-      flex-direction: column !important;
-      padding: 8px 10px !important;
-      border-bottom: 1px solid var(--border-light) !important;
-      font-size: 12px !important;
-    }
-    .abk-prod-table-wrap td::before {
-      content: attr(data-label) !important;
-      font-size: 9px !important;
-      font-weight: 600 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.08em !important;
-      color: var(--ink-faint) !important;
-      margin-bottom: 3px !important;
-    }
-    /* Actions cell spans full width */
-    .abk-prod-table-wrap td.abk-td-actions {
-      grid-column: 1 / -1 !important;
-      flex-direction: row !important;
-      align-items: center !important;
-      justify-content: flex-end !important;
-      gap: 8px !important;
-      border-bottom: none !important;
-      padding: 8px 10px !important;
-    }
-    .abk-prod-table-wrap td.abk-td-actions::before { display: none !important; }
-    /* Empty state spans full width */
-    .abk-prod-table-wrap td[colspan] {
-      grid-column: 1 / -1 !important;
-      border-bottom: none !important;
-    }
-    .abk-prod-table-wrap td[colspan]::before { display: none !important; }
-    /* Remove hidden classes - show all columns */
-    .abk-prod-col-sku,
-    .abk-prod-col-cost { display: flex !important; }
+    .abk-prod-table-wrap table { width: 100% !important; table-layout: fixed !important; font-size: 10px !important; }
+    .abk-prod-table-wrap th { padding: 6px 4px !important; font-size: 8.5px !important; letter-spacing: 0 !important; white-space: normal !important; word-break: break-word !important; }
+    .abk-prod-table-wrap td { padding: 6px 4px !important; font-size: 10px !important; white-space: normal !important; word-break: break-word !important; line-height: 1.3 !important; }
+    .abk-prod-table-wrap td::before { content: none !important; display: none !important; }
+    .abk-prod-col-sku, .abk-prod-col-cost { display: table-cell !important; }
+    .abk-prod-table-wrap .abk-td-actions button { padding: 4px 5px !important; font-size: 9px !important; }
+    .abk-prod-table-wrap .abk-td-actions svg { width: 12px !important; height: 12px !important; }
   }
 
   /* Autocomplete dropdown */
