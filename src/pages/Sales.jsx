@@ -139,11 +139,9 @@ const SALES_CSS = `
     .abk-sales-header > * { width: 100% !important; }
     .abk-sales-modal-grid { grid-template-columns: 1fr !important; }
 
-    /* ── Sales table: scrollable on mobile — normal table layout ── */
+    /* ── Sales table: horizontal scroll — full table, swipe to see all columns ── */
     .abk-sales-table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-    .abk-sales-table-wrap table { min-width: 580px !important; }
-    .abk-sales-table-wrap th { padding: 8px 10px !important; font-size: 10px !important; }
-    .abk-sales-table-wrap td { padding: 9px 10px !important; font-size: 12px !important; }
+    .abk-sales-table-wrap table { width: max-content !important; min-width: 100% !important; table-layout: auto !important; }
     .abk-sales-table-wrap td::before { content: none !important; display: none !important; }
   }
 
@@ -677,6 +675,16 @@ export default function Sales({ dark }) {
 
           <div className="abk-sales-table-wrap" style={{ overflowX:'auto', borderRadius:'0 0 16px 16px' }}>
             <table style={{ width:'100%', borderCollapse:'collapse' }}>
+              {/* colgroup — controls per-column widths on mobile via CSS col selectors */}
+              <colgroup>
+                <col />{/* Date & Time */}
+                <col />{/* Product */}
+                <col />{/* Customer */}
+                <col />{/* Qty */}
+                <col />{/* Unit Price */}
+                <col />{/* Total */}
+                <col />{/* Actions */}
+              </colgroup>
               <thead>
                 <tr style={{ background:'var(--cream-deep)', borderBottom:'1px solid var(--border)' }}>
                   {[

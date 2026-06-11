@@ -149,13 +149,10 @@ const PRODUCTS_CSS = `
     .abk-prod-header > * { width: 100% !important; }
     .abk-prod-modal-grid { grid-template-columns: 1fr !important; }
 
-    /* ── Products table: scrollable on mobile — normal table layout ── */
+    /* ── Products table: horizontal scroll — full table, swipe to see all columns ── */
     .abk-prod-table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-    .abk-prod-table-wrap table { min-width: 600px !important; }
-    .abk-prod-table-wrap th { padding: 8px 10px !important; font-size: 10px !important; }
-    .abk-prod-table-wrap td { padding: 9px 10px !important; font-size: 12px !important; }
+    .abk-prod-table-wrap table { width: max-content !important; min-width: 100% !important; table-layout: auto !important; }
     .abk-prod-table-wrap td::before { content: none !important; display: none !important; }
-    /* Keep SKU and Cost columns visible */
     .abk-prod-col-sku, .abk-prod-col-cost { display: table-cell !important; }
   }
 
@@ -635,6 +632,17 @@ export default function Products({ dark }) {
         }}>
           <div className="abk-prod-table-wrap" style={{ overflowX:'auto', borderRadius:16 }}>
             <table style={{ width:'100%', borderCollapse:'collapse' }}>
+              {/* colgroup — controls per-column widths on mobile via CSS col selectors */}
+              <colgroup>
+                <col />{/* Name */}
+                <col />{/* SKU */}
+                <col />{/* Category */}
+                <col />{/* Price */}
+                <col />{/* Cost */}
+                <col />{/* Stock */}
+                <col />{/* Status */}
+                <col />{/* Actions */}
+              </colgroup>
               <thead>
                 <tr style={{ background:'var(--cream-deep)', borderBottom:'1px solid var(--border)' }}>
                   {[

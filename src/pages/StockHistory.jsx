@@ -72,11 +72,9 @@ const GLOBAL_CSS = `
     .abk-stk-filter > * { width: 100% !important; }
     .abk-stk-header { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
 
-    /* ── Stock History table: scrollable on mobile — normal table layout ── */
+    /* ── Stock History table: horizontal scroll — full table, swipe to see all columns ── */
     .abk-stk-table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-    .abk-stk-table-wrap table { min-width: 640px !important; }
-    .abk-stk-table-wrap th { padding: 8px 10px !important; font-size: 10px !important; }
-    .abk-stk-table-wrap td { padding: 9px 10px !important; font-size: 12px !important; }
+    .abk-stk-table-wrap table { width: max-content !important; min-width: 100% !important; table-layout: auto !important; }
     .abk-stk-table-wrap td::before { content: none !important; display: none !important; }
   }
 
@@ -95,7 +93,19 @@ const GLOBAL_CSS = `
 
 `;
 
-function fmtDate(dateStr, timeStr) {
+function fmtDate(dateStr, timeStr, fallbackISO) {
+  // If date is missing, try falling back to createdAt (ISO datetime string from backend)
+  if (!dateStr && fallbackISO) {
+    try {
+      const dt = new Date(fallbackISO);
+      if (!isNaN(dt.getTime())) {
+        return {
+          date: dt.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          time: dt.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit' }),
+        };
+      }
+    } catch {}
+  }
   if (!dateStr) return { date: '—', time: '' };
   try {
     // Truncate time to HH:mm:ss to avoid nanosecond precision rejection (Java LocalTime serialises as HH:mm:ss.nnnnnnnnn)
@@ -401,6 +411,18 @@ export default function StockHistory({ dark: darkProp }) {
 
           <div className="abk-stk-table-wrap" style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              {/* colgroup — controls per-column widths on mobile via CSS col selectors */}
+              <colgroup>
+                <col />{/* Date & Time */}
+                <col />{/* Product */}
+                <col />{/* Type */}
+                <col />{/* Change */}
+                <col />{/* Before */}
+                <col />{/* After */}
+                <col />{/* Reason */}
+                <col />{/* User */}
+                <col />{/* Actions */}
+              </colgroup>
               <thead>
                 <tr style={{ background: 'var(--cream-deep)', borderBottom: '1px solid var(--border)' }}>
                   {[
@@ -430,7 +452,7 @@ export default function StockHistory({ dark: darkProp }) {
                   const cfg        = TYPE_CFG[h.type] || TYPE_CFG.ADJUSTMENT;
                   const Icon       = cfg.icon;
                   const isPositive = (h.quantityChange ?? 0) > 0;
-                  const { date, time } = fmtDate(h.date, h.time);
+                  const { date, time } = fmtDate(h.date, h.time, h.createdAt);
 
                   return (
                     <tr key={h.id} className="abk-row-hover" style={{

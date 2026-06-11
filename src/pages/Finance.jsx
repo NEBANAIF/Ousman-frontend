@@ -174,15 +174,9 @@ const FINANCE_CSS = `
     .abk-fin-table-wrap.abk-fin-scroll-table th { padding: 8px 8px !important; font-size: 9px !important; }
     .abk-fin-table-wrap.abk-fin-scroll-table td { padding: 8px 8px !important; font-size: 11.5px !important; }
 
-    /* ── Expenses table: always a normal scrollable table (no card stacking) ── */
-    .abk-fin-table-wrap.abk-fin-stack-table {
-      overflow-x: auto !important;
-      -webkit-overflow-scrolling: touch !important;
-    }
-    .abk-fin-table-wrap.abk-fin-stack-table table { min-width: 520px !important; }
-    .abk-fin-table-wrap.abk-fin-stack-table th { padding: 8px 10px !important; font-size: 10px !important; }
-    .abk-fin-table-wrap.abk-fin-stack-table td { padding: 9px 10px !important; font-size: 12px !important; }
-    /* Remove data-label pseudo-element — not needed for normal table */
+    /* ── Expenses table: horizontal scroll — full table, swipe to see all columns ── */
+    .abk-fin-table-wrap.abk-fin-stack-table { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+    .abk-fin-table-wrap.abk-fin-stack-table table { width: max-content !important; min-width: 100% !important; table-layout: auto !important; }
     .abk-fin-table-wrap.abk-fin-stack-table td::before { content: none !important; display: none !important; }
 
     /* Net profit chip: stack vertically */
@@ -806,6 +800,14 @@ export default function Finance({ dark }) {
               </div>
               <div className="abk-fin-table-wrap abk-fin-stack-table" style={{ overflowX:'auto', borderRadius:'0 0 16px 16px' }}>
                 <table style={{ width:'100%', borderCollapse:'collapse' }}>
+                  {/* colgroup — controls per-column widths on mobile via CSS col selectors */}
+                  <colgroup>
+                    <col />{/* Date */}
+                    <col />{/* Category */}
+                    <col />{/* Description */}
+                    <col />{/* Amount */}
+                    <col />{/* Actions */}
+                  </colgroup>
                   <thead>
                     <tr style={{ background:'var(--cream-deep)', borderBottom:'1px solid var(--border)' }}>
                       {[t('finance.date'), t('finance.category'), t('finance.description'), t('finance.amount'), t('ui.actions')].map(h => (
