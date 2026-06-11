@@ -366,7 +366,7 @@
     "totalUsers": "Total Users",
     "activeUsers": "Active Users",
     "admins": "Admins",
-    "managers": "Managers",
+    "workers": "Workers",
     "addUser": "Add User",
     "editUser": "Edit User",
     "newUser": "Add New User",
@@ -402,6 +402,7 @@
     "userAdded": "User added successfully!",
     "userUpdated": "User updated successfully!",
     "userDeleted": "User deleted."
+    
   },
   "settings": {
     "title": "Settings",
