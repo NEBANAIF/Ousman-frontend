@@ -149,15 +149,14 @@ const PRODUCTS_CSS = `
     .abk-prod-header > * { width: 100% !important; }
     .abk-prod-modal-grid { grid-template-columns: 1fr !important; }
 
-    /* ── Products table: compact fit — all columns visible, no scroll ── */
-    .abk-prod-table-wrap { overflow-x: visible !important; }
-    .abk-prod-table-wrap table { width: 100% !important; table-layout: fixed !important; font-size: 10px !important; }
-    .abk-prod-table-wrap th { padding: 6px 4px !important; font-size: 8.5px !important; letter-spacing: 0 !important; white-space: normal !important; word-break: break-word !important; }
-    .abk-prod-table-wrap td { padding: 6px 4px !important; font-size: 10px !important; white-space: normal !important; word-break: break-word !important; line-height: 1.3 !important; }
+    /* ── Products table: scrollable on mobile — normal table layout ── */
+    .abk-prod-table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+    .abk-prod-table-wrap table { min-width: 600px !important; }
+    .abk-prod-table-wrap th { padding: 8px 10px !important; font-size: 10px !important; }
+    .abk-prod-table-wrap td { padding: 9px 10px !important; font-size: 12px !important; }
     .abk-prod-table-wrap td::before { content: none !important; display: none !important; }
+    /* Keep SKU and Cost columns visible */
     .abk-prod-col-sku, .abk-prod-col-cost { display: table-cell !important; }
-    .abk-prod-table-wrap .abk-td-actions button { padding: 4px 5px !important; font-size: 9px !important; }
-    .abk-prod-table-wrap .abk-td-actions svg { width: 12px !important; height: 12px !important; }
   }
 
   /* Autocomplete dropdown */

@@ -174,14 +174,16 @@ const FINANCE_CSS = `
     .abk-fin-table-wrap.abk-fin-scroll-table th { padding: 8px 8px !important; font-size: 9px !important; }
     .abk-fin-table-wrap.abk-fin-scroll-table td { padding: 8px 8px !important; font-size: 11.5px !important; }
 
-    /* ── Expenses table: compact fit — all columns visible, no scroll ── */
-    .abk-fin-table-wrap.abk-fin-stack-table { overflow-x: visible !important; }
-    .abk-fin-table-wrap.abk-fin-stack-table table { width: 100% !important; table-layout: fixed !important; font-size: 10px !important; }
-    .abk-fin-table-wrap.abk-fin-stack-table th { padding: 6px 4px !important; font-size: 8.5px !important; letter-spacing: 0 !important; white-space: normal !important; word-break: break-word !important; }
-    .abk-fin-table-wrap.abk-fin-stack-table td { padding: 6px 4px !important; font-size: 10px !important; white-space: normal !important; word-break: break-word !important; line-height: 1.3 !important; }
+    /* ── Expenses table: always a normal scrollable table (no card stacking) ── */
+    .abk-fin-table-wrap.abk-fin-stack-table {
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    .abk-fin-table-wrap.abk-fin-stack-table table { min-width: 520px !important; }
+    .abk-fin-table-wrap.abk-fin-stack-table th { padding: 8px 10px !important; font-size: 10px !important; }
+    .abk-fin-table-wrap.abk-fin-stack-table td { padding: 9px 10px !important; font-size: 12px !important; }
+    /* Remove data-label pseudo-element — not needed for normal table */
     .abk-fin-table-wrap.abk-fin-stack-table td::before { content: none !important; display: none !important; }
-    .abk-fin-table-wrap.abk-fin-stack-table .abk-td-actions button { padding: 4px 5px !important; font-size: 9px !important; }
-    .abk-fin-table-wrap.abk-fin-stack-table .abk-td-actions svg { width: 12px !important; height: 12px !important; }
 
     /* Net profit chip: stack vertically */
     .abk-fin-net-chip {

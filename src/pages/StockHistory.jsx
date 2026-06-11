@@ -72,14 +72,12 @@ const GLOBAL_CSS = `
     .abk-stk-filter > * { width: 100% !important; }
     .abk-stk-header { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
 
-    /* ── Stock History table: compact fit — all columns visible, no scroll ── */
-    .abk-stk-table-wrap { overflow-x: visible !important; }
-    .abk-stk-table-wrap table { width: 100% !important; table-layout: fixed !important; font-size: 10px !important; }
-    .abk-stk-table-wrap th { padding: 6px 4px !important; font-size: 8.5px !important; letter-spacing: 0 !important; white-space: normal !important; word-break: break-word !important; }
-    .abk-stk-table-wrap td { padding: 6px 4px !important; font-size: 10px !important; white-space: normal !important; word-break: break-word !important; line-height: 1.3 !important; }
+    /* ── Stock History table: scrollable on mobile — normal table layout ── */
+    .abk-stk-table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+    .abk-stk-table-wrap table { min-width: 640px !important; }
+    .abk-stk-table-wrap th { padding: 8px 10px !important; font-size: 10px !important; }
+    .abk-stk-table-wrap td { padding: 9px 10px !important; font-size: 12px !important; }
     .abk-stk-table-wrap td::before { content: none !important; display: none !important; }
-    .abk-stk-table-wrap .abk-td-actions button { padding: 4px 5px !important; font-size: 9px !important; }
-    .abk-stk-table-wrap .abk-td-actions svg { width: 12px !important; height: 12px !important; }
   }
 
   @media (max-width:480px) {
