@@ -137,7 +137,7 @@ const FINANCE_CSS = `
   /* ── Responsive: phone ── */
   @media (max-width:767px) {
     /* Root page */
-    .abk-fin { overflow-x: hidden !important; box-sizing: border-box !important; }
+    .abk-fin { box-sizing: border-box !important; } /* overflow-x left as visible so tables can scroll */
     .abk-fin-pad { padding: 1rem 0.75rem 3rem !important; box-sizing: border-box !important; width: 100% !important; }
 
     /* Grids */
@@ -165,19 +165,15 @@ const FINANCE_CSS = `
     }
 
     /* Scrollable tables */
-    /* Scrollable tables (period comparison - keep scrollable) */
+    /* ── Finance tables: horizontal scroll — all columns visible, no hiding ── */
     .abk-fin-table-wrap.abk-fin-scroll-table {
       overflow-x: auto !important;
       -webkit-overflow-scrolling: touch !important;
     }
-    .abk-fin-table-wrap.abk-fin-scroll-table table { min-width: 480px; }
-    .abk-fin-table-wrap.abk-fin-scroll-table th { padding: 8px 8px !important; font-size: 9px !important; }
-    .abk-fin-table-wrap.abk-fin-scroll-table td { padding: 8px 8px !important; font-size: 11.5px !important; }
-
-    /* ── Expenses table: horizontal scroll — full table, swipe to see all columns ── */
+    .abk-fin-table-wrap.abk-fin-scroll-table table { min-width: 560px !important; table-layout: auto !important; }
+    /* ── Expenses table: horizontal scroll — all columns visible, no hiding ── */
     .abk-fin-table-wrap.abk-fin-stack-table { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-    .abk-fin-table-wrap.abk-fin-stack-table table { width: max-content !important; min-width: 100% !important; table-layout: auto !important; }
-    .abk-fin-table-wrap.abk-fin-stack-table td::before { content: none !important; display: none !important; }
+    .abk-fin-table-wrap.abk-fin-stack-table table { min-width: 700px !important; table-layout: auto !important; }
 
     /* Net profit chip: stack vertically */
     .abk-fin-net-chip {
@@ -731,7 +727,7 @@ export default function Finance({ dark }) {
                 <span style={{ fontSize:11, color:'var(--ink-faint)', fontWeight:300 }}>{t('finance.clickRow')}</span>
               </div>
               <div className="abk-fin-table-wrap abk-fin-scroll-table" style={{ overflowX:'auto', borderRadius:'0 0 16px 16px' }}>
-                <table style={{ width:'100%', borderCollapse:'collapse' }}>
+                <table style={{ width:'max-content', minWidth:'100%', borderCollapse:'collapse' }}>
                   <thead>
                     <tr style={{ background:'var(--cream-deep)', borderBottom:'1px solid var(--border)' }}>
                       {[t('finance.period'), t('finance.revenue'), t('finance.cogs'), t('finance.grossProfit'), t('finance.expenses'), t('finance.netProfit'), t('finance.margin')].map(h => (
@@ -799,7 +795,7 @@ export default function Finance({ dark }) {
                 <span style={{ fontSize:11, color:'var(--ink-faint)', fontWeight:300 }}>{filteredExp.length} {t('finance.expenseCount')} · {t('finance.recordsInDb')}</span>
               </div>
               <div className="abk-fin-table-wrap abk-fin-stack-table" style={{ overflowX:'auto', borderRadius:'0 0 16px 16px' }}>
-                <table style={{ width:'100%', borderCollapse:'collapse' }}>
+                <table style={{ width:'max-content', minWidth:'100%', borderCollapse:'collapse' }}>
                   {/* colgroup — controls per-column widths on mobile via CSS col selectors */}
                   <colgroup>
                     <col />{/* Date */}

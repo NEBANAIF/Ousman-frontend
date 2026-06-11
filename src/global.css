@@ -620,11 +620,9 @@ body {
   /* Full-width buttons */
   .abk-btn-mobile-full { width: 100% !important; }
 
-  /* Tighter table cells — hide less-important columns via data attribute */
+  /* Tighter table cells — all columns remain visible, scroll horizontally */
   .abk-table th { font-size: 9px; padding: 8px 8px; white-space: nowrap; }
   .abk-table td { font-size: 11.5px; padding: 8px 8px; }
-  .abk-table th[data-hide-mobile="true"],
-  .abk-table td[data-hide-mobile="true"] { display: none; }
 
   /* Ensure table scroll wrapper is always scrollable */
   .abk-table-wrap {

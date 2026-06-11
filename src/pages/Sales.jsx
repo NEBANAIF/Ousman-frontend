@@ -139,10 +139,9 @@ const SALES_CSS = `
     .abk-sales-header > * { width: 100% !important; }
     .abk-sales-modal-grid { grid-template-columns: 1fr !important; }
 
-    /* ── Sales table: horizontal scroll — full table, swipe to see all columns ── */
+    /* ── Sales table: horizontal scroll — all columns visible, no hiding ── */
     .abk-sales-table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-    .abk-sales-table-wrap table { width: max-content !important; min-width: 100% !important; table-layout: auto !important; }
-    .abk-sales-table-wrap td::before { content: none !important; display: none !important; }
+    .abk-sales-table-wrap table { min-width: 760px !important; table-layout: auto !important; }
   }
 
   @media (max-width:480px) {
@@ -704,7 +703,7 @@ export default function Sales({ dark, user }) {
           </div>
 
           <div className="abk-sales-table-wrap" style={{ overflowX:'auto', borderRadius:'0 0 16px 16px' }}>
-            <table style={{ width:'100%', borderCollapse:'collapse' }}>
+            <table style={{ width:'max-content', minWidth:'100%', borderCollapse:'collapse' }}>
               {/* colgroup — controls per-column widths on mobile via CSS col selectors */}
               <colgroup>
                 <col />{/* Date & Time */}

@@ -149,11 +149,9 @@ const PRODUCTS_CSS = `
     .abk-prod-header > * { width: 100% !important; }
     .abk-prod-modal-grid { grid-template-columns: 1fr !important; }
 
-    /* ── Products table: horizontal scroll — full table, swipe to see all columns ── */
+    /* ── Products table: horizontal scroll — all columns visible, no hiding ── */
     .abk-prod-table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-    .abk-prod-table-wrap table { width: max-content !important; min-width: 100% !important; table-layout: auto !important; }
-    .abk-prod-table-wrap td::before { content: none !important; display: none !important; }
-    .abk-prod-col-sku, .abk-prod-col-cost { display: table-cell !important; }
+    .abk-prod-table-wrap table { min-width: 820px !important; table-layout: auto !important; }
   }
 
   /* Autocomplete dropdown */
@@ -406,7 +404,7 @@ function ProductAutocomplete({ products, value, onChange, placeholder }) {
    ════════════════════════════════════════════════════════════════════════════ */
 export default function Products({ dark, user }) {
   // ── Role flags ────────────────────────────────────────────────────────
-  // WORKER: full access (add, edit, delete, stock adjustment)
+  // WORKER: read-only (no add, edit, delete, or stock adjustment)
   // ADMIN:  full access
   const isAdmin  = user?.role?.toUpperCase() === 'ADMIN';
   const isWorker = user?.role?.toUpperCase() === 'WORKER';
@@ -577,8 +575,8 @@ export default function Products({ dark, user }) {
             >
               <RefreshCw size={12} /> Refresh
             </button>
-            {/* Add product button — ADMIN and WORKER */}
-            {(isAdmin || isWorker) && (
+            {/* Add product button — ADMIN only */}
+            {isAdmin && (
             <button onClick={openCreate} style={{
               display:'inline-flex', alignItems:'center', gap:6, padding:'8px 16px',
               background:'var(--green)', color:'#fff', border:'none', borderRadius:11,
@@ -639,7 +637,7 @@ export default function Products({ dark, user }) {
           animationDelay:'.32s', transition:'background .3s, border-color .3s',
         }}>
           <div className="abk-prod-table-wrap" style={{ overflowX:'auto', borderRadius:16 }}>
-            <table style={{ width:'100%', borderCollapse:'collapse' }}>
+            <table style={{ width:'max-content', minWidth:'100%', borderCollapse:'collapse' }}>
               {/* colgroup — controls per-column widths on mobile via CSS col selectors */}
               <colgroup>
                 <col />{/* Name */}
@@ -716,10 +714,10 @@ export default function Products({ dark, user }) {
                       <td data-label="Status" style={{ padding:'11px 14px' }}>
                         <Pill bg={sc.bg} color={sc.color} border={sc.border}>{sc.label}</Pill>
                       </td>
-                      {/* Actions — edit/delete/stock-adjust for ADMIN and WORKER */}
+                      {/* Actions — edit/delete/stock-adjust for ADMIN only; worker sees read-only indicator */}
                       <td className="abk-td-actions" style={{ padding:'11px 14px' }}>
                         <div style={{ display:'flex', gap:6, alignItems:'center' }}>
-                          {(isAdmin || isWorker) ? (
+                          {isAdmin ? (
                             <>
                               <button onClick={() => openEdit(p)} className="abk-btn-icon" style={{ width:28, height:28, background:'var(--blue-bg)', color:'var(--blue)', border:'1px solid rgba(24,95,165,.2)' }} title="Edit">
                                 <Edit2 size={12} />
@@ -731,7 +729,10 @@ export default function Products({ dark, user }) {
                                 <SlidersHorizontal size={12} />
                               </button>
                             </>
-                          ) : null}
+                          ) : (
+                            /* Worker: show "View only" label */
+                            <span style={{ fontSize:10, color:'var(--ink-faint)', fontStyle:'italic', padding:'2px 6px' }}>View only</span>
+                          )}
                         </div>
                       </td>
                     </tr>
