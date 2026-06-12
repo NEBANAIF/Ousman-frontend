@@ -72,9 +72,10 @@ const GLOBAL_CSS = `
     .abk-stk-filter > * { width: 100% !important; }
     .abk-stk-header { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
 
-    /* ── Stock History table: horizontal scroll — all 9 columns visible, no hiding ── */
+    /* ── Stock History table: horizontal scroll — full table, swipe to see all columns ── */
     .abk-stk-table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-    .abk-stk-table-wrap table { min-width: 900px !important; table-layout: auto !important; }
+    .abk-stk-table-wrap table { width: max-content !important; min-width: 100% !important; table-layout: auto !important; }
+    .abk-stk-table-wrap td::before { content: none !important; display: none !important; }
   }
 
   @media (max-width:480px) {
@@ -389,7 +390,7 @@ export default function StockHistory({ dark: darkProp }) {
         {/* ── Table card ────────────────────────────────────────────────── */}
         <div className="abk-anim-scale-in" style={{
           background: 'var(--card)', border: '1px solid var(--border)',
-          borderRadius: 14, overflow: 'hidden',
+          borderRadius: 14, overflow: 'hidden', width: '100%',
           transition: 'background .3s, border-color .3s',
           animationDelay: '.38s',
         }}>
@@ -408,8 +409,8 @@ export default function StockHistory({ dark: darkProp }) {
             </div>
           </div>
 
-          <div className="abk-stk-table-wrap" style={{ overflowX: 'auto' }}>
-            <table style={{ width: 'max-content', minWidth: '100%', borderCollapse: 'collapse' }}>
+          <div className="abk-stk-table-wrap" style={{ overflowX: 'auto', width: '100%', display: 'block' }}>
+            <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse' }}>
               {/* colgroup — controls per-column widths on mobile via CSS col selectors */}
               <colgroup>
                 <col />{/* Date & Time */}

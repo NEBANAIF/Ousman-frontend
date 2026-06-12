@@ -632,12 +632,12 @@ export default function Products({ dark, user }) {
         {/* ── Table ─────────────────────────────────────────────────────── */}
         <div className="abk-anim-scale-in" style={{
           background:'var(--card)', border:'1px solid var(--border)',
-          borderRadius:16,
+          borderRadius:16, width:'100%', overflow:'hidden',
           boxShadow:'0 2px 12px rgba(0,0,0,.06)',
           animationDelay:'.32s', transition:'background .3s, border-color .3s',
         }}>
-          <div className="abk-prod-table-wrap" style={{ overflowX:'auto', borderRadius:16 }}>
-            <table style={{ width:'max-content', minWidth:'100%', borderCollapse:'collapse' }}>
+          <div className="abk-prod-table-wrap" style={{ overflowX:'auto', borderRadius:16, width:'100%', display:'block' }}>
+            <table style={{ width:'100%', minWidth:'max-content', borderCollapse:'collapse' }}>
               {/* colgroup — controls per-column widths on mobile via CSS col selectors */}
               <colgroup>
                 <col />{/* Name */}

@@ -25,11 +25,16 @@
   background: rgba(255,255,255,.15);
 }
 
-/* ── 3. Tables never collapse below their natural content width ───────────── */
+/* ── 3. Tables fill their wrapper; scroll kicks in when content is wider ──── */
+[class*="-table-wrap"] {
+  width: 100% !important;
+  display: block !important;
+  /* No overflow:hidden on the card — that clips the scrollbar */
+}
 [class*="-table-wrap"] table {
-  /* max-content lets the table be as wide as it needs — wrapper scrolls */
-  width: max-content !important;
-  min-width: 100% !important;
+  /* Fill the wrapper on desktop; min-width triggers horizontal scroll when needed */
+  width: 100% !important;
+  min-width: max-content !important;
   table-layout: auto !important;
   border-collapse: collapse;
 }
