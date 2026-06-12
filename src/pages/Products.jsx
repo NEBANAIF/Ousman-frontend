@@ -404,7 +404,7 @@ function ProductAutocomplete({ products, value, onChange, placeholder }) {
    ════════════════════════════════════════════════════════════════════════════ */
 export default function Products({ dark, user }) {
   // ── Role flags ────────────────────────────────────────────────────────
-  // WORKER: read-only (no add, edit, delete, or stock adjustment)
+  // WORKER: full access (add, edit, delete, stock adjustment)
   // ADMIN:  full access
   const isAdmin  = user?.role?.toUpperCase() === 'ADMIN';
   const isWorker = user?.role?.toUpperCase() === 'WORKER';
@@ -575,8 +575,8 @@ export default function Products({ dark, user }) {
             >
               <RefreshCw size={12} /> Refresh
             </button>
-            {/* Add product button — ADMIN only */}
-            {isAdmin && (
+            {/* Add product button — ADMIN and WORKER */}
+            {(isAdmin || isWorker) && (
             <button onClick={openCreate} style={{
               display:'inline-flex', alignItems:'center', gap:6, padding:'8px 16px',
               background:'var(--green)', color:'#fff', border:'none', borderRadius:11,
@@ -656,7 +656,7 @@ export default function Products({ dark, user }) {
                     { label: t('products.sku'), cls: 'abk-prod-col-sku' },
                     { label: t('products.category') },
                     { label: t('products.sellingPrice') },
-                    { label: t('products.costPrice'), cls: 'abk-prod-col-cost' },
+                    ...(!isWorker ? [{ label: t('products.costPrice'), cls: 'abk-prod-col-cost' }] : []),
                     { label: t('products.currentStock') },
                     { label: 'Status' },
                     { label: t('ui.actions') },
@@ -698,10 +698,12 @@ export default function Products({ dark, user }) {
                           ${(p.price ?? 0).toLocaleString(undefined, { minimumFractionDigits:2, maximumFractionDigits:2 })}
                         </span>
                       </td>
-                      {/* Cost price */}
+                      {/* Cost price — ADMIN only */}
+                      {!isWorker && (
                       <td className="abk-prod-col-cost" data-label="Cost" style={{ padding:'11px 14px', fontSize:12, color:'var(--ink-faint)', fontWeight:300 }}>
                         ${(p.cost ?? 0).toLocaleString(undefined, { minimumFractionDigits:2, maximumFractionDigits:2 })}
                       </td>
+                      )}
                       {/* Stock */}
                       <td data-label="Stock" style={{ padding:'11px 14px' }}>
                         <span style={{
@@ -714,25 +716,25 @@ export default function Products({ dark, user }) {
                       <td data-label="Status" style={{ padding:'11px 14px' }}>
                         <Pill bg={sc.bg} color={sc.color} border={sc.border}>{sc.label}</Pill>
                       </td>
-                      {/* Actions — edit/delete/stock-adjust for ADMIN only; worker sees read-only indicator */}
+                      {/* Actions — edit/delete/stock-adjust for ADMIN and WORKER */}
                       <td className="abk-td-actions" style={{ padding:'11px 14px' }}>
                         <div style={{ display:'flex', gap:6, alignItems:'center' }}>
-                          {isAdmin ? (
+                          {(isAdmin || isWorker) ? (
                             <>
                               <button onClick={() => openEdit(p)} className="abk-btn-icon" style={{ width:28, height:28, background:'var(--blue-bg)', color:'var(--blue)', border:'1px solid rgba(24,95,165,.2)' }} title="Edit">
                                 <Edit2 size={12} />
                               </button>
-                              <button onClick={() => setDeleteConfirm(p)} className="abk-btn-icon" style={{ width:28, height:28, background:'var(--red-bg)', color:'var(--red-text)', border:'1px solid var(--red-border)' }} title="Delete">
-                                <Trash2 size={12} />
-                              </button>
+                              {/* Delete — ADMIN only */}
+                              {isAdmin && (
+                                <button onClick={() => setDeleteConfirm(p)} className="abk-btn-icon" style={{ width:28, height:28, background:'var(--red-bg)', color:'var(--red-text)', border:'1px solid var(--red-border)' }} title="Delete">
+                                  <Trash2 size={12} />
+                                </button>
+                              )}
                               <button onClick={() => { setStockModal(p); setStockMode('add'); setStockQty(''); setStockReason(''); }} className="abk-btn-icon" style={{ width:28, height:28, background:'var(--green-bg)', color:'var(--green)', border:'1px solid rgba(29,158,117,.25)' }} title={t('products.adjustStock')}>
                                 <SlidersHorizontal size={12} />
                               </button>
                             </>
-                          ) : (
-                            /* Worker: show "View only" label */
-                            <span style={{ fontSize:10, color:'var(--ink-faint)', fontStyle:'italic', padding:'2px 6px' }}>View only</span>
-                          )}
+                          ) : null}
                         </div>
                       </td>
                     </tr>
@@ -806,18 +808,20 @@ export default function Products({ dark, user }) {
                 </div>
               </div>
 
-              <div className="abk-prod-modal-grid" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:12 }}>
+              <div className="abk-prod-modal-grid" style={{ display:'grid', gridTemplateColumns: isWorker ? '1fr' : '1fr 1fr', gap:12 }}>
                 <div>
                   <label className="abk-label">{t('products.sellingPrice')} *</label>
                   <input type="number" min="0" step="0.01" value={form.price} onChange={e => setForm(f => ({ ...f, price:e.target.value }))} placeholder="0.00" className="abk-input" />
                 </div>
-                <div>
-                  <label className="abk-label">{t('products.costPrice')}</label>
-                  <input type="number" min="0" step="0.01" value={form.cost} onChange={e => setForm(f => ({ ...f, cost:e.target.value }))} placeholder="0.00" className="abk-input" />
-                </div>
+                {!isWorker && (
+                  <div>
+                    <label className="abk-label">{t('products.costPrice')}</label>
+                    <input type="number" min="0" step="0.01" value={form.cost} onChange={e => setForm(f => ({ ...f, cost:e.target.value }))} placeholder="0.00" className="abk-input" />
+                  </div>
+                )}
               </div>
 
-              {margin && (
+              {!isWorker && margin && (
                 <div style={{ background:'var(--green-bg)', border:'1px solid rgba(29,158,117,.25)', borderRadius:10, padding:'10px 14px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
                   <span style={{ fontSize:12, color:'var(--green)', fontWeight:500 }}>{t('products.profitMargin')}</span>
                   <span className="abk-serif" style={{ fontSize:14, fontWeight:600, color:'var(--green)' }}>

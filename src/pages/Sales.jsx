@@ -712,14 +712,15 @@ export default function Sales({ dark, user }) {
                 <col />{/* Qty */}
                 <col />{/* Unit Price */}
                 <col />{/* Total */}
-                <col />{/* Actions */}
+                {isAdmin && <col />}{/* Actions — admin only */}
               </colgroup>
               <thead>
                 <tr style={{ background:'var(--cream-deep)', borderBottom:'1px solid var(--border)' }}>
                   {[
                     `${t('sales.date')} & ${t('sales.time')}`,
                     t('sales.product'), t('sales.customer'),
-                    t('sales.qty'), t('sales.unitPrice'), t('sales.total'), t('ui.actions'),
+                    t('sales.qty'), t('sales.unitPrice'), t('sales.total'),
+                    ...(isAdmin ? [t('ui.actions')] : []),
                   ].map(h => (
                     <th key={h} style={{ padding:'10px 14px', textAlign:'left', fontSize:10, fontWeight:600, letterSpacing:'0.10em', textTransform:'uppercase', color:'var(--ink-light)', whiteSpace:'nowrap' }}>{h}</th>
                   ))}
@@ -728,7 +729,7 @@ export default function Sales({ dark, user }) {
               <tbody>
                 {paginated.length === 0 ? (
                   <tr>
-                    <td colSpan={7} style={{ textAlign:'center', padding:'3.5rem 0' }}>
+                    <td colSpan={isAdmin ? 7 : 6} style={{ textAlign:'center', padding:'3.5rem 0' }}>
                       <ShoppingCart size={34} style={{ color:'var(--border)', margin:'0 auto 10px', display:'block' }} />
                       <p style={{ color:'var(--ink-faint)', fontSize:13, fontWeight:300 }}>
                         {search || dateFilter ? t('sales.noSalesFilter') : t('sales.noSalesYet')}
@@ -769,9 +770,9 @@ export default function Sales({ dark, user }) {
                         ${fmt(s.total)}
                       </span>
                     </td>
-                    {/* Actions — delete button only shown to ADMIN */}
-                    <td className="abk-td-actions" style={{ padding:'11px 14px' }}>
-                      {isAdmin ? (
+                    {/* Actions — delete button only shown to ADMIN; column hidden for workers */}
+                    {isAdmin && (
+                      <td className="abk-td-actions" style={{ padding:'11px 14px' }}>
                         <button onClick={() => setDeleteConfirm(s)} style={{
                           width:28, height:28, borderRadius:8, border:'1px solid var(--red-border)',
                           background:'var(--red-bg)', color:'var(--red-text)',
@@ -783,11 +784,8 @@ export default function Sales({ dark, user }) {
                         >
                           <Trash2 size={12} />
                         </button>
-                      ) : (
-                        /* Worker sees a dash instead of delete button */
-                        <span style={{ fontSize:11, color:'var(--ink-faint)', paddingLeft:8 }}>—</span>
-                      )}
-                    </td>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
