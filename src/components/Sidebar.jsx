@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 import {
   LayoutDashboard, Package, ShoppingCart, DollarSign,
   TrendingUp, Clock, Users, LogOut, ChevronRight, Moon, Sun, Languages,
-  Shield, Briefcase,
+  Shield, Briefcase, Landmark,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -28,6 +28,7 @@ const NAV = [
   { key: 'dashboard', i18n: 'nav.dashboard', icon: LayoutDashboard, adminOnly: true  },
   { key: 'products',  i18n: 'nav.products',  icon: Package,          adminOnly: false },
   { key: 'sales',     i18n: 'nav.sales',     icon: ShoppingCart,     adminOnly: false },
+  { key: 'loans',     i18n: 'nav.loans',     icon: Landmark,         adminOnly: false },
   { key: 'finance',   i18n: 'nav.finance',   icon: DollarSign,       adminOnly: true  },
   { key: 'analytics', i18n: 'nav.analytics', icon: TrendingUp,       adminOnly: true  },
   { key: 'stock',     i18n: 'nav.stock',     icon: Clock,            adminOnly: true  },

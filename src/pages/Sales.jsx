@@ -453,7 +453,7 @@ export default function Sales({ dark, user }) {
   const [saving,         setSaving]         = useState(false);
   const [deleteConfirm,  setDeleteConfirm]  = useState(null);
   const [successMsg,     setSuccessMsg]     = useState('');
-  const [form,           setForm]           = useState({ productId:'', quantity:1, price:'', customerName:'' });
+  const [form,           setForm]           = useState({ productId:'', quantity:1, price:'', customerName:'', paymentStatus:'PAID_FULL', paidAmount:'' });
   const [periodSummary,  setPeriodSummary]  = useState(null);
   const [allTimeSummary, setAllTimeSummary] = useState(null);
 
@@ -503,7 +503,7 @@ export default function Sales({ dark, user }) {
   const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage));
   const paginated  = filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
-  function openModal() { setForm({ productId:'', quantity:1, price:'', customerName:'' }); setShowModal(true); }
+  function openModal() { setForm({ productId:'', quantity:1, price:'', customerName:'', paymentStatus:'PAID_FULL', paidAmount:'' }); setShowModal(true); }
 
   function handleProductChange(productId) {
     const p = products.find(p => String(p.id) === String(productId));
@@ -512,11 +512,33 @@ export default function Sales({ dark, user }) {
 
   async function handleRecord() {
     if (!form.productId || !form.quantity || !form.price) { alert(t('sales.alertFields')); return; }
+    if (!form.customerName || !form.customerName.trim()) { alert('Customer name is required.'); return; }
     const sel = products.find(p => String(p.id) === String(form.productId));
     if (sel && parseInt(form.quantity) > sel.stock) { alert(`${t('sales.notEnoughStock')} ${sel.stock}`); return; }
+
+    const total = (parseFloat(form.price) || 0) * (parseInt(form.quantity) || 0);
+    let paidAmount = total;
+    let remainingLoan = 0;
+
+    if (form.paymentStatus === 'PARTIAL_LOAN') {
+      paidAmount = parseFloat(form.paidAmount) || 0;
+      if (paidAmount < 0)      { alert('Amount paid cannot be negative.'); return; }
+      if (paidAmount > total)  { alert(`Amount paid (${paidAmount.toFixed(2)}) cannot exceed the total (${total.toFixed(2)}).`); return; }
+      remainingLoan = total - paidAmount;
+    }
+
     setSaving(true);
     try {
-      await recordSale({ product:{ id:parseInt(form.productId) }, quantity:parseInt(form.quantity), price:parseFloat(form.price), customerName:form.customerName || null, recordedBy: user?.name || 'Staff' });
+      await recordSale({
+        product:       { id: parseInt(form.productId) },
+        quantity:      parseInt(form.quantity),
+        price:         parseFloat(form.price),
+        customerName:  form.customerName.trim(),
+        paymentStatus: form.paymentStatus,
+        paidAmount,
+        remainingLoan,
+        recordedBy:    user?.name || 'Staff',
+      });
       setShowModal(false); showSuccess(t('sales.successRecord')); await loadAll();
     } catch (e) { alert(e.message || t('sales.errorRecord')); }
     finally { setSaving(false); }
@@ -528,7 +550,10 @@ export default function Sales({ dark, user }) {
   }
 
   const selectedProduct = products.find(p => String(p.id) === String(form.productId));
-  const saleTotal = (parseFloat(form.price) || 0) * (parseInt(form.quantity) || 0);
+  const saleTotal       = (parseFloat(form.price) || 0) * (parseInt(form.quantity) || 0);
+  const paidAmt         = form.paymentStatus === 'PARTIAL_LOAN' ? (parseFloat(form.paidAmount) || 0) : saleTotal;
+  const remainingAmt    = form.paymentStatus === 'PARTIAL_LOAN' ? Math.max(0, saleTotal - paidAmt) : 0;
+  const paidAmtInvalid  = form.paymentStatus === 'PARTIAL_LOAN' && (paidAmt < 0 || paidAmt > saleTotal);
 
   /* ── Loading ── */
   if (loading) return (
@@ -712,6 +737,7 @@ export default function Sales({ dark, user }) {
                 <col />{/* Qty */}
                 <col />{/* Unit Price */}
                 <col />{/* Total */}
+                <col />{/* Payment */}
                 {isAdmin && <col />}{/* Actions — admin only */}
               </colgroup>
               <thead>
@@ -720,6 +746,7 @@ export default function Sales({ dark, user }) {
                     `${t('sales.date')} & ${t('sales.time')}`,
                     t('sales.product'), t('sales.customer'),
                     t('sales.qty'), t('sales.unitPrice'), t('sales.total'),
+                    'Payment',
                     ...(isAdmin ? [t('ui.actions')] : []),
                   ].map(h => (
                     <th key={h} style={{ padding:'10px 14px', textAlign:'left', fontSize:10, fontWeight:600, letterSpacing:'0.10em', textTransform:'uppercase', color:'var(--ink-light)', whiteSpace:'nowrap' }}>{h}</th>
@@ -729,7 +756,7 @@ export default function Sales({ dark, user }) {
               <tbody>
                 {paginated.length === 0 ? (
                   <tr>
-                    <td colSpan={isAdmin ? 7 : 6} style={{ textAlign:'center', padding:'3.5rem 0' }}>
+                    <td colSpan={isAdmin ? 8 : 7} style={{ textAlign:'center', padding:'3.5rem 0' }}>
                       <ShoppingCart size={34} style={{ color:'var(--border)', margin:'0 auto 10px', display:'block' }} />
                       <p style={{ color:'var(--ink-faint)', fontSize:13, fontWeight:300 }}>
                         {search || dateFilter ? t('sales.noSalesFilter') : t('sales.noSalesYet')}
@@ -769,6 +796,29 @@ export default function Sales({ dark, user }) {
                       <span className="abk-serif" style={{ fontSize:14, fontWeight:600, color:'var(--green)' }}>
                         ${fmt(s.total)}
                       </span>
+                    </td>
+                    {/* Payment status */}
+                    <td data-label="Payment" style={{ padding:'11px 14px' }}>
+                      {s.paymentStatus === 'PARTIAL_LOAN' ? (
+                        <div>
+                          <span style={{
+                            display:'inline-block', fontSize:11, fontWeight:600, padding:'2px 9px',
+                            borderRadius:20, background:'var(--amber-bg)',
+                            color:'var(--amber)', border:'1px solid var(--yellow-border)',
+                          }}>Loan</span>
+                          {(s.remainingLoan ?? 0) > 0 && (
+                            <div style={{ fontSize:10.5, color:'var(--amber)', marginTop:3, fontWeight:400 }}>
+                              Owed: ${fmt(s.remainingLoan)}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <span style={{
+                          display:'inline-block', fontSize:11, fontWeight:600, padding:'2px 9px',
+                          borderRadius:20, background:'var(--green-bg)',
+                          color:'var(--green)', border:'1px solid rgba(29,158,117,.25)',
+                        }}>Paid</span>
+                      )}
                     </td>
                     {/* Actions — delete button only shown to ADMIN; column hidden for workers */}
                     {isAdmin && (
@@ -882,26 +932,108 @@ export default function Sales({ dark, user }) {
                 </div>
               </div>
 
-              {/* Customer */}
+              {/* Customer — REQUIRED */}
               <div>
-                <label className="abk-label">{t('sales.customerOptional')}</label>
-                <input value={form.customerName} onChange={e => setForm(f => ({ ...f, customerName:e.target.value }))}
-                  placeholder={t('sales.walkIn')} className="abk-input" />
+                <label className="abk-label">Customer Name *</label>
+                <input
+                  value={form.customerName}
+                  onChange={e => setForm(f => ({ ...f, customerName: e.target.value }))}
+                  placeholder="Enter customer name"
+                  className="abk-input"
+                  style={{ borderColor: form.customerName.trim() === '' && saving ? 'var(--red-text)' : undefined }}
+                />
+                {form.customerName.trim() === '' && (
+                  <div style={{ fontSize:11, color:'var(--red-text)', marginTop:4, display:'flex', alignItems:'center', gap:3 }}>
+                    <XCircle size={11} /> Customer name is required
+                  </div>
+                )}
               </div>
+
+              {/* Payment option */}
+              <div>
+                <label className="abk-label">Payment</label>
+                <div style={{ display:'flex', gap:8 }}>
+                  {[
+                    { value:'PAID_FULL',    label:'Paid Full',     color:'var(--green)',  bg:'var(--green-bg)'  },
+                    { value:'PARTIAL_LOAN', label:'Partial / Loan', color:'var(--amber)',  bg:'var(--amber-bg)'  },
+                  ].map(opt => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setForm(f => ({ ...f, paymentStatus: opt.value, paidAmount: '' }))}
+                      style={{
+                        flex:1, padding:'9px 0', borderRadius:10, fontSize:12, fontWeight:600,
+                        cursor:'pointer', fontFamily:'DM Sans,sans-serif',
+                        transition:'all .15s',
+                        background: form.paymentStatus === opt.value ? opt.bg   : 'var(--card)',
+                        color:      form.paymentStatus === opt.value ? opt.color : 'var(--ink-light)',
+                        border:     form.paymentStatus === opt.value
+                          ? `2px solid ${opt.color}`
+                          : '1px solid var(--border)',
+                      }}
+                    >{opt.label}</button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Amount Paid — shown only for PARTIAL_LOAN */}
+              {form.paymentStatus === 'PARTIAL_LOAN' && (
+                <div>
+                  <label className="abk-label">Amount Paid</label>
+                  <input
+                    type="number" min="0" max={saleTotal} step="0.01"
+                    value={form.paidAmount}
+                    onChange={e => setForm(f => ({ ...f, paidAmount: e.target.value }))}
+                    placeholder={`0.00 – ${saleTotal.toFixed(2)}`}
+                    className="abk-input"
+                    style={{ borderColor: paidAmtInvalid ? 'var(--red-text)' : undefined }}
+                  />
+                  {paidAmtInvalid && (
+                    <div style={{ fontSize:11, color:'var(--red-text)', marginTop:4, display:'flex', alignItems:'center', gap:3 }}>
+                      <XCircle size={11} />
+                      {paidAmt < 0 ? 'Cannot be negative.' : `Cannot exceed total of $${saleTotal.toFixed(2)}.`}
+                    </div>
+                  )}
+                  {/* Remaining loan preview */}
+                  {!paidAmtInvalid && saleTotal > 0 && (
+                    <div style={{
+                      marginTop:8, background:'var(--amber-bg)',
+                      border:'1px solid var(--yellow-border)',
+                      borderRadius:9, padding:'8px 12px',
+                      display:'flex', justifyContent:'space-between', alignItems:'center',
+                    }}>
+                      <span style={{ fontSize:11, color:'var(--amber)', fontWeight:500 }}>Remaining Loan</span>
+                      <span className="abk-serif" style={{ fontSize:15, fontWeight:700, color:'var(--amber)' }}>
+                        ${remainingAmt.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Total preview */}
               <div style={{
                 background:'var(--green-bg)', border:'1px solid rgba(29,158,117,.25)',
                 borderRadius:11, padding:'12px 16px',
-                display:'flex', alignItems:'center', justifyContent:'space-between',
               }}>
-                <div>
-                  <div style={{ fontSize:11, color:'var(--green)', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.08em' }}>{t('sales.totalAmount')}</div>
-                  <div style={{ fontSize:11, color:'var(--ink-faint)', marginTop:2, fontWeight:300 }}>{form.quantity || 0} × ${form.price || 0}</div>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                  <div>
+                    <div style={{ fontSize:11, color:'var(--green)', fontWeight:500, textTransform:'uppercase', letterSpacing:'0.08em' }}>{t('sales.totalAmount')}</div>
+                    <div style={{ fontSize:11, color:'var(--ink-faint)', marginTop:2, fontWeight:300 }}>{form.quantity || 0} × ${form.price || 0}</div>
+                  </div>
+                  <div className="abk-serif" style={{ fontSize:26, fontWeight:700, color:'var(--green)' }}>
+                    ${saleTotal.toFixed(2)}
+                  </div>
                 </div>
-                <div className="abk-serif" style={{ fontSize:26, fontWeight:700, color:'var(--green)' }}>
-                  ${saleTotal.toFixed(2)}
-                </div>
+                {form.paymentStatus === 'PARTIAL_LOAN' && saleTotal > 0 && !paidAmtInvalid && (
+                  <div style={{
+                    marginTop:10, paddingTop:10,
+                    borderTop:'1px dashed rgba(29,158,117,.3)',
+                    display:'flex', justifyContent:'space-between', fontSize:11,
+                  }}>
+                    <span style={{ color:'var(--green)', fontWeight:400 }}>Paid now</span>
+                    <span style={{ color:'var(--green)', fontWeight:600 }}>${paidAmt.toFixed(2)}</span>
+                  </div>
+                )}
               </div>
             </div>
 

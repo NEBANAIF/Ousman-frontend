@@ -77,6 +77,8 @@ export const getSales      = ()     => api.get('/sales').then(r => r.data);
 export const getSalesToday = ()     => api.get('/sales/today').then(r => r.data);
 export const getSaleById   = (id)   => api.get(`/sales/${id}`).then(r => r.data);
 export const recordSale    = (data) => api.post('/sales', data).then(r => r.data);
+export const updateSalePayment = (id, paidAmount) =>
+  api.put(`/sales/${id}/payment`, { paidAmount }).then(r => r.data);
 export const deleteSale    = (id)   => api.delete(`/sales/${id}`).then(r => r.data);
 
 // ── ANALYTICS (ADMIN only — returns 403 for WORKER) ───────────────────────

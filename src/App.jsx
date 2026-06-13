@@ -23,6 +23,7 @@ import Finance      from './pages/Finance';
 import Analytics    from './pages/Analytics';
 import StockHistory from './pages/StockHistory';
 import UserAccess   from './pages/UserAccess';
+import Loans        from './pages/Loans';
 
 const BACKEND = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://abuki-backend.onrender.com';
 
@@ -30,7 +31,7 @@ const BACKEND = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://ab
  * Pages that a WORKER role is allowed to navigate to.
  * Any other page key will be redirected to 'sales'.
  */
-const WORKER_ALLOWED_PAGES = ['sales', 'products'];
+const WORKER_ALLOWED_PAGES = ['sales', 'products', 'loans'];
 
 export default function App() {
   // ── Restore user from localStorage on first render ───────────────────
@@ -127,6 +128,7 @@ export default function App() {
     // ── Both roles ──────────────────────────────────────────────────────
     products: <Products  dark={dark} user={user} />,
     sales:    <Sales     dark={dark} user={user} />,
+    loans:    <Loans     dark={dark} user={user} />,
 
     // ── Admin only ──────────────────────────────────────────────────────
     ...(isAdmin && {
