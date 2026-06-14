@@ -227,6 +227,12 @@ export default function StockHistory({ dark: darkProp }) {
       (h.reason ?? '').toLowerCase().includes(q) ||
       (h.user   ?? '').toLowerCase().includes(q);
     return matchSearch && (typeFilter === 'ALL' || h.type === typeFilter) && (!dateFilter || String(h.date) === dateFilter);
+  })
+  // Sort by date in DECREASING order (newest first)
+  .sort((a, b) => {
+    const dateA = new Date(a.date || a.createdAt || 0).getTime();
+    const dateB = new Date(b.date || b.createdAt || 0).getTime();
+    return dateB - dateA; // Decreasing order (newest first)
   });
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage));
@@ -362,14 +368,20 @@ export default function StockHistory({ dark: darkProp }) {
             <option value="DISCARD">{t('stock.typeDiscard')}</option>
           </select>
 
-          {/* Date filter */}
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-            <Calendar size={13} style={{ position: 'absolute', left: 11, color: 'var(--ink-faint)', pointerEvents: 'none' }} />
-            <input
-              type="date" value={dateFilter}
-              onChange={e => { setDateFilter(e.target.value); setPage(1); }}
-              style={{ ...inputStyle, paddingLeft: 32 }}
-            />
+          {/* Date filter - with label */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <label style={{ fontSize: 11, fontWeight: 500, color: 'var(--ink-light)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              {t('stock.filterByDate') || 'Filter by Date'}
+            </label>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <Calendar size={13} style={{ position: 'absolute', left: 11, color: 'var(--ink-faint)', pointerEvents: 'none' }} />
+              <input
+                type="date" 
+                value={dateFilter}
+                onChange={e => { setDateFilter(e.target.value); setPage(1); }}
+                style={{ ...inputStyle, paddingLeft: 32, backgroundColor: dateFilter ? 'var(--green-bg)' : 'var(--card)' }}
+              />
+            </div>
           </div>
 
           {/* Clear */}
