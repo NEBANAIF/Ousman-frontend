@@ -47,7 +47,7 @@
     "contactAdmin": "Contact an administrator to gain access"
   },
   "dashboard": {
-    "erpSubtitle": "Stokio ERP · Retail Operations",
+    "erpSubtitle": "Neba ERP · Retail Operations",
     "adminName": "Admin",
     "live": "Live",
     "salesToday": "Sales Today",
@@ -87,7 +87,7 @@
     "systemLog": "System log",
     "noActivity": "No activity yet",
     "whatErpDoes": "What This ERP Does",
-    "erpDescription": "Stokio is a complete retail management system built for growing businesses. Everything below is already live and connected — no extra setup needed.",
+    "erpDescription": "Neba is a complete retail management system built for growing businesses. Everything below is already live and connected — no extra setup needed.",
     "erpFooter": "All features are live and connected. We hope it is helpful.",
     "financeTitle": "Finance Page",
     "financeBadge": "Built-in",
@@ -375,7 +375,7 @@
     "fullName": "Full Name",
     "namePlaceholder": "e.g. John Doe",
     "phonePlaceholder": "+251911000000",
-    "emailPlaceholder": "user@abuki.com",
+    "emailPlaceholder": "user@neba.com",
     "email": "Email",
     "phone": "Phone",
     "role": "Role",

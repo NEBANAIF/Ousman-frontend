@@ -37,9 +37,9 @@ function scheduleLogout() {
     _logoutTimer = null;
     // Double-check: if token is still present it means no successful request
     // cancelled the timer → session really is invalid → log out.
-    if (localStorage.getItem('abuki_token')) {
-      localStorage.removeItem('abuki_token');
-      localStorage.removeItem('abuki_user');
+    if (localStorage.getItem('neba_token')) {
+      localStorage.removeItem('neba_token');
+      localStorage.removeItem('neba_user');
       if (!window.location.pathname.includes('login')) window.location.href = '/';
     }
   }, 4000);
@@ -53,7 +53,7 @@ function cancelLogout() {
 }
 
 api.interceptors.request.use(config => {
-  const token = localStorage.getItem('abuki_token');
+  const token = localStorage.getItem('neba_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
     cancelLogout(); // a new request with a valid token means session is alive

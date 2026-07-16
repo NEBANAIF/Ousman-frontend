@@ -1,5 +1,5 @@
 # ============================================================
-#  Abuki Frontend — Multi-stage Docker build
+#  Neba Frontend — Multi-stage Docker build
 #  Stage 1: Vite build (Node 20)
 #  Stage 2: Nginx static server
 #  Note: VITE_API_URL is intentionally empty — Nginx proxies /api/

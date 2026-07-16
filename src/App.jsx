@@ -25,7 +25,7 @@ import StockHistory from './pages/StockHistory';
 import UserAccess   from './pages/UserAccess';
 import Loans        from './pages/Loans';
 
-const BACKEND = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://abuki-backend.onrender.com';
+const BACKEND = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://neba-backend.onrender.com';
 
 /**
  * Pages that a WORKER role is allowed to navigate to.
@@ -37,8 +37,8 @@ export default function App() {
   // ── Restore user from localStorage on first render ───────────────────
   const [user, setUser] = useState(() => {
     try {
-      const stored = localStorage.getItem('abuki_user');
-      const token  = localStorage.getItem('abuki_token');
+      const stored = localStorage.getItem('neba_user');
+      const token  = localStorage.getItem('neba_token');
       return stored && token ? JSON.parse(stored) : null;
     } catch { return null; }
   });
@@ -47,13 +47,13 @@ export default function App() {
   const [current, setCurrent] = useState('dashboard');
 
   const [dark, setDark] = useState(() => {
-    try { return localStorage.getItem('abuki_theme') === 'dark'; } catch { return false; }
+    try { return localStorage.getItem('neba_theme') === 'dark'; } catch { return false; }
   });
 
   // ── Apply dark class to <html> ────────────────────────────────────────
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
-    try { localStorage.setItem('abuki_theme', dark ? 'dark' : 'light'); } catch {}
+    try { localStorage.setItem('neba_theme', dark ? 'dark' : 'light'); } catch {}
   }, [dark]);
 
   // ── Keep-alive ping every 4 minutes to prevent Render cold starts ──────
@@ -106,8 +106,8 @@ export default function App() {
   function handleLogin(data) {
     const u = { id: data.id, name: data.name, email: data.email, role: data.role };
     setUser(u);
-    localStorage.setItem('abuki_user', JSON.stringify(u));
-    localStorage.setItem('abuki_token', data.token);
+    localStorage.setItem('neba_user', JSON.stringify(u));
+    localStorage.setItem('neba_token', data.token);
 
     // Redirect workers to sales immediately after login
     const isWorker = data.role?.toUpperCase() === 'WORKER';
@@ -116,8 +116,8 @@ export default function App() {
 
   // ── Logout handler ────────────────────────────────────────────────────
   function handleLogout() {
-    localStorage.removeItem('abuki_token');
-    localStorage.removeItem('abuki_user');
+    localStorage.removeItem('neba_token');
+    localStorage.removeItem('neba_user');
     setUser(null);
     setCurrent('dashboard');
     window.location.href = '/';

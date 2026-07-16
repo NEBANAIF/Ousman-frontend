@@ -16,8 +16,8 @@ export default function Login({ onLogin }) {
     setError('');
     try {
       const data = await login(email, password);
-      localStorage.setItem('abuki_token', data.token);
-      localStorage.setItem('abuki_user', JSON.stringify({
+      localStorage.setItem('neba_token', data.token);
+      localStorage.setItem('neba_user', JSON.stringify({
         id: data.id, name: data.name,
         email: data.email, role: data.role,
       }));
@@ -64,7 +64,7 @@ export default function Login({ onLogin }) {
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="admin@abuki.com"
+                placeholder="admin@neba.com"
                 className="w-full border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-sm text-slate-700 dark:text-slate-100 bg-white dark:bg-slate-700 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900 transition-all"
                 autoFocus
               />

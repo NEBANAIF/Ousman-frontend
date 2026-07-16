@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import en from '../locales/en.json';
 import am from '../locales/am.json';
 
-const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('abuki_lang') : null;
+const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('neba_lang') : null;
 const lng = stored === 'am' ? 'am' : 'en';
 
 void i18n.use(initReactI18next).init({

@@ -40,10 +40,10 @@ export default function Sidebar({ current, setCurrent, user, onLogout, dark, onD
   function toggleLang() {
     const next = i18n.language === 'am' ? 'en' : 'am';
     void i18n.changeLanguage(next);
-    try { localStorage.setItem('abuki_lang', next); } catch {}
+    try { localStorage.setItem('neba_lang', next); } catch {}
   }
 
-  const roleKey  = user?.role?.toUpperCase() || 'VIEWER';
+  const roleKey  = user?.role?.toUpperCase() || 'WORKER';
   const isWorker = roleKey === 'WORKER';
   const isAdmin  = roleKey === 'ADMIN';
   const headerBg = dark ? '#090D14' : '#0F1F04';

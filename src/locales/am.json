@@ -47,7 +47,7 @@
     "contactAdmin": "ለመጠቀም አስተዳዳሪን ያነጋግሩ"
   },
   "dashboard": {
-    "erpSubtitle": "ስቶኪዮ ERP · የችርቻሮ ሥራ",
+    "erpSubtitle": "Neba ERP · የችርቻሮ ሥራ",
     "adminName": "አስተዳዳሪ",
     "live": "ቀጥታ",
     "salesToday": "የዛሬ ሽያጮች",
@@ -87,7 +87,7 @@
     "systemLog": "የሥርዓት ምዝገባ",
     "noActivity": "ምንም እንቅስቃሴ የለም",
     "whatErpDoes": "ይህ ERP ምን ያደርጋል",
-    "erpDescription": "ስቶኪዮ ለሚያድጉ ንግዶች የተሰራ ሙሉ የችርቻሮ አስተዳደር ሥርዓት ነው። ከዚህ በታች ያለው ሁሉ ቀጥታ ሆኖ ተያይዟል — ምንም ተጨማሪ ቅንብር አያስፈልግም።",
+    "erpDescription": "Neba ለሚያድጉ ንግዶች የተሰራ ሙሉ የችርቻሮ አስተዳደር ሥርዓት ነው። ከዚህ በታች ያለው ሁሉ ቀጥታ ሆኖ ተያይዟል — ምንም ተጨማሪ ቅንብር አያስፈልግም።",
     "erpFooter": "ሁሉም ባህሪያት ቀጥታ ሆነዋል። ጠቃሚ ይሆናል ብለን ተስፋ እናደርጋለን።",
     "financeTitle": "የፋይናንስ ገጽ",
     "financeBadge": "ውስጠ-ሥርዓት",
@@ -383,7 +383,7 @@
     "fullName": "ሙሉ ስም",
     "namePlaceholder": "ለምሳሌ፡ አበበ ከበደ",
     "phonePlaceholder": "+251911000000",
-    "emailPlaceholder": "user@abuki.com",
+    "emailPlaceholder": "user@neba.com",
     "email": "ኢሜይል",
     "phone": "ስልክ",
     "role": "ሚና",

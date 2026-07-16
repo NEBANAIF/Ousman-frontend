@@ -820,20 +820,25 @@ export default function Sales({ dark, user }) {
                         }}>Paid</span>
                       )}
                     </td>
-                    {/* Actions — delete button only shown to ADMIN; column hidden for workers */}
+                    {/* Actions — delete button only shown to ADMIN, and never for loan
+                        records (partial or with an outstanding balance). Loans can never
+                        be deleted by anyone, so the button is simply not rendered for them
+                        rather than being shown and then rejected. */}
                     {isAdmin && (
                       <td className="abk-td-actions" style={{ padding:'11px 14px' }}>
-                        <button onClick={() => setDeleteConfirm(s)} style={{
-                          width:28, height:28, borderRadius:8, border:'1px solid var(--red-border)',
-                          background:'var(--red-bg)', color:'var(--red-text)',
-                          display:'inline-flex', alignItems:'center', justifyContent:'center',
-                          cursor:'pointer', transition:'background .15s, transform .1s',
-                        }}
-                          onMouseEnter={e => { e.currentTarget.style.background = 'var(--red-border)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = 'var(--red-bg)'; e.currentTarget.style.transform = 'none'; }}
-                        >
-                          <Trash2 size={12} />
-                        </button>
+                        {s.paymentStatus !== 'PARTIAL_LOAN' && (s.remainingLoan ?? 0) <= 0 && (
+                          <button onClick={() => setDeleteConfirm(s)} style={{
+                            width:28, height:28, borderRadius:8, border:'1px solid var(--red-border)',
+                            background:'var(--red-bg)', color:'var(--red-text)',
+                            display:'inline-flex', alignItems:'center', justifyContent:'center',
+                            cursor:'pointer', transition:'background .15s, transform .1s',
+                          }}
+                            onMouseEnter={e => { e.currentTarget.style.background = 'var(--red-border)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'var(--red-bg)'; e.currentTarget.style.transform = 'none'; }}
+                          >
+                            <Trash2 size={12} />
+                          </button>
+                        )}
                       </td>
                     )}
                   </tr>
