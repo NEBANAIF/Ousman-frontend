@@ -414,7 +414,7 @@
     "languageDesc": "Select your preferred language",
     "helpTitle": "Help & Support",
     "helpDesc": "Need help? Contact your system administrator.",
-    "version": "Abuki ERP v1.0",
+    "version": "Neba ERP v1.0",
     "builtWith": "Spring Boot + React Project"
   }
 }

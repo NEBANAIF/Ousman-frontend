@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import {
   Landmark, Search, RefreshCw, X, XCircle, CheckCircle,
-  Trash2, Pencil, ChevronLeft, ChevronRight, Calendar,
+  Pencil, ChevronLeft, ChevronRight, Calendar,
 } from 'lucide-react';
-import { getSales, getSalesToday, updateSalePayment, deleteSale } from '../services/api';
+
+import { getSales, getSalesToday, updateSalePayment } from '../services/api';
 import { localYMD, normalizeSaleDate } from '../utils/dateUtils';
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -263,7 +264,6 @@ export default function Loans({ dark, user }) {
   const [rowsPerPage,   setRowsPerPage]   = useState(10);
   const [successMsg,    setSuccessMsg]    = useState('');
   const [editModal,     setEditModal]     = useState(null); // sale object being edited
-  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [saving,        setSaving]        = useState(false);
 
   // Edit form state — tracks additional payment amount
@@ -333,15 +333,6 @@ export default function Loans({ dark, user }) {
       await loadLoans();
     } catch (e) { alert(e.message || 'Failed to save payment.'); }
     finally { setSaving(false); }
-  }
-
-  async function handleDelete(id) {
-    try {
-      await deleteSale(id);
-      setDeleteConfirm(null);
-      showSuccess('Loan record deleted and stock restored.');
-      await loadLoans();
-    } catch { alert('Failed to delete.'); }
   }
 
   /* ── Loading ── */
@@ -582,21 +573,6 @@ export default function Loans({ dark, user }) {
                           >
                             <Pencil size={13} />
                           </button>
-                          {/* Delete */}
-                          {isAdmin && (
-                            <button onClick={() => setDeleteConfirm(s)} title="Delete loan record" style={{
-                              width: 30, height: 30, borderRadius: 8,
-                              border: '1px solid var(--red-border)',
-                              background: 'var(--red-bg)', color: 'var(--red-text)',
-                              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                              cursor: 'pointer', transition: 'background .15s, transform .1s',
-                            }}
-                              onMouseEnter={e => { e.currentTarget.style.background = 'var(--red-border)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                              onMouseLeave={e => { e.currentTarget.style.background = 'var(--red-bg)'; e.currentTarget.style.transform = 'none'; }}
-                            >
-                              <Trash2 size={13} />
-                            </button>
-                          )}
                         </div>
                       </td>
                     </tr>
@@ -752,33 +728,6 @@ export default function Loans({ dark, user }) {
                   ? <><RefreshCw size={13} style={{ animation: 'spin 1s linear infinite' }} /> Saving…</>
                   : <><CheckCircle size={13} /> Save Payment</>}
               </BtnPrimary>
-            </div>
-          </Modal>
-        )}
-
-        {/* ══════════════════════════════════════════════════════════════════
-            MODAL: Delete Confirm
-        ══════════════════════════════════════════════════════════════════ */}
-        {deleteConfirm && (
-          <Modal onClose={() => setDeleteConfirm(null)} maxWidth={360}>
-            <div style={{ padding: '2rem 1.6rem 1.4rem', textAlign: 'center' }}>
-              <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--red-bg)', border: '2px solid var(--red-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
-                <Trash2 size={22} style={{ color: 'var(--red-text)' }} />
-              </div>
-              <div className="abk-serif" style={{ fontSize: 17, fontWeight: 500, color: 'var(--ink)', marginBottom: 6 }}>Delete Loan Record?</div>
-              <p style={{ fontSize: 13, color: 'var(--ink-light)', marginBottom: 4, fontWeight: 300 }}>
-                Sale to <strong style={{ color: 'var(--ink)' }}>{deleteConfirm.customerName}</strong> for <strong style={{ color: 'var(--ink)' }}>{deleteConfirm.product?.name}</strong>
-              </p>
-              <p style={{ fontSize: 12, color: 'var(--ink-faint)', marginBottom: 4 }}>
-                Outstanding: <span className="abk-serif" style={{ fontWeight: 700, color: 'var(--amber)', fontSize: 14 }}>${fmt(deleteConfirm.remainingLoan)}</span>
-              </p>
-              <p style={{ fontSize: 11, color: 'var(--blue)', marginBottom: 20, fontWeight: 300 }}>Stock will be restored to its previous amount.</p>
-              <div style={{ display: 'flex', gap: 10 }}>
-                <BtnSecondary onClick={() => setDeleteConfirm(null)}>Cancel</BtnSecondary>
-                <BtnPrimary onClick={() => handleDelete(deleteConfirm.id)} color="#c53030">
-                  <Trash2 size={13} /> Delete
-                </BtnPrimary>
-              </div>
             </div>
           </Modal>
         )}

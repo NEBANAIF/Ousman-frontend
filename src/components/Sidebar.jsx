@@ -44,7 +44,7 @@ export default function Sidebar({ current, setCurrent, user, onLogout, dark, onD
     try { localStorage.setItem('abuki_lang', next); } catch {}
   }
 
-  const roleKey  = user?.role?.toUpperCase() || 'VIEWER';
+  const roleKey  = user?.role?.toUpperCase() || 'WORKER';
   const isWorker = roleKey === 'WORKER';
   const isAdmin  = roleKey === 'ADMIN';
   const headerBg = dark ? '#090D14' : '#0F1F04';

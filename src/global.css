@@ -297,9 +297,7 @@ body {
 
 /* ── 7. Role badges ──────────────────────────────────────────────────────── */
 .abk-role-ADMIN   { background: var(--abk-red-bg);     color: var(--abk-red-text); }
-.abk-role-MANAGER { background: var(--abk-blue-bg);    color: var(--abk-blue); }
-.abk-role-CASHIER { background: var(--abk-green-bg);   color: var(--abk-green); }
-.abk-role-VIEWER  { background: var(--abk-cream-deep); color: var(--abk-ink-light); }
+.abk-role-WORKER  { background: var(--abk-blue-bg);    color: var(--abk-blue); }
 
 /* ── 8. Cards ────────────────────────────────────────────────────────────── */
 .abk-card {

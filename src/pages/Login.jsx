@@ -38,7 +38,7 @@ export default function Login({ onLogin }) {
           <div className="w-16 h-16 bg-blue-600 dark:bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
             <span className="text-white font-bold text-3xl">A</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Abuki ERP</h1>
+          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Neba ERP</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">የችርቻሮ ሥርዓት · Sign in to continue</p>
         </div>
 
@@ -105,7 +105,7 @@ export default function Login({ onLogin }) {
         </div>
 
         <p className="text-center text-xs text-slate-400 dark:text-slate-600 mt-6">
-          Abuki ERP v1.0 · Contact admin to get access
+          Neba ERP v1.0 · Contact admin to get access
         </p>
       </div>
     </div>

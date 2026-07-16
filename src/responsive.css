@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   Abuki ERP — Global Responsive Table System
+   Neba ERP — Global Responsive Table System
    Strategy: horizontal scroll on ALL screen sizes — NO columns hidden ever.
    Every table wrapper gets overflow-x: auto. Min-widths ensure headers
    stay aligned with cells and nothing collapses below readable width.
