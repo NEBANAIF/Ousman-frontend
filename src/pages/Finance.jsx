@@ -170,14 +170,18 @@ const FINANCE_CSS = `
       overflow-x: auto !important;
       -webkit-overflow-scrolling: touch !important;
     }
-    .abk-fin-table-wrap.abk-fin-scroll-table table { min-width: 480px; }
+    .abk-fin-table-wrap.abk-fin-scroll-table table { min-width: 560px !important; table-layout: auto !important; }
     .abk-fin-table-wrap.abk-fin-scroll-table th { padding: 8px 8px !important; font-size: 9px !important; }
     .abk-fin-table-wrap.abk-fin-scroll-table td { padding: 8px 8px !important; font-size: 11.5px !important; }
 
-    /* ── Expenses table: horizontal scroll — full table, swipe to see all columns ── */
+    /* ── Expenses table: horizontal scroll — full table, swipe to see all columns ──
+       NOTE: explicit px min-width (not width:max-content) — max-content is unreliable
+       for <table> sizing on mobile browsers and was causing columns to squish/wrap
+       (e.g. amounts and category badges breaking mid-word) instead of triggering
+       scroll. Matches responsive.css's .abk-fin-table-wrap.abk-fin-stack-table rule
+       and the pattern used by Products/Sales/UserAccess. */
     .abk-fin-table-wrap.abk-fin-stack-table { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-    .abk-fin-table-wrap.abk-fin-stack-table table { width: max-content !important; min-width: 100% !important; table-layout: auto !important; }
-    .abk-fin-table-wrap.abk-fin-stack-table td::before { content: none !important; display: none !important; }
+    .abk-fin-table-wrap.abk-fin-stack-table table { min-width: 700px !important; table-layout: auto !important; }
 
     /* Net profit chip: stack vertically */
     .abk-fin-net-chip {

@@ -72,10 +72,13 @@ const GLOBAL_CSS = `
     .abk-stk-filter > * { width: 100% !important; }
     .abk-stk-header { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
 
-    /* ── Stock History table: horizontal scroll — full table, swipe to see all columns ── */
+    /* ── Stock History table: horizontal scroll — full table, swipe to see all columns ──
+       NOTE: explicit px min-width (not width:max-content) — max-content is unreliable
+       for <table> sizing on mobile browsers and was causing columns to squish/wrap
+       instead of triggering scroll. Matches the 9-column width already set in
+       responsive.css (.abk-stk-table-wrap) and the pattern used by Products/Sales. */
     .abk-stk-table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-    .abk-stk-table-wrap table { width: max-content !important; min-width: 100% !important; table-layout: auto !important; }
-    .abk-stk-table-wrap td::before { content: none !important; display: none !important; }
+    .abk-stk-table-wrap table { min-width: 900px !important; table-layout: auto !important; }
   }
 
   @media (max-width:480px) {
