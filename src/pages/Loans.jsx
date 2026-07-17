@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Landmark, Search, RefreshCw, X, XCircle, CheckCircle,
   Pencil, ChevronLeft, ChevronRight, Calendar,
@@ -244,6 +245,7 @@ function KpiCard({ label, value, sub, Icon, stripeColor, iconBg, iconColor, prog
    Loans page
    ════════════════════════════════════════════════════════════════════════════ */
 export default function Loans({ dark, user }) {
+  const { t } = useTranslation();
   const isAdmin  = user?.role?.toUpperCase() === 'ADMIN';
   const isWorker = user?.role?.toUpperCase() === 'WORKER';
 
@@ -279,7 +281,7 @@ export default function Loans({ dark, user }) {
       // Only show PARTIAL_LOAN sales (remainingLoan > 0)
       setLoans(all.filter(s => s.paymentStatus === 'PARTIAL_LOAN' && (s.remainingLoan ?? 0) > 0));
     } catch {
-      setError('Could not load loan data. Please try again.');
+      setError(t('loans.loadError'));
     } finally {
       setLoading(false);
     }
@@ -321,17 +323,17 @@ export default function Loans({ dark, user }) {
 
   async function handleSavePayment() {
     if (!editModal) return;
-    if (editAddAmt <= 0) { alert('Enter a payment amount greater than 0.'); return; }
-    if (editInvalid) { alert(`Payment cannot exceed outstanding balance of $${fmt(editModal.remainingLoan)}.`); return; }
+    if (editAddAmt <= 0) { alert(t('loans.enterAmountAlert')); return; }
+    if (editInvalid) { alert(t('loans.exceedAlert', { amount: fmt(editModal.remainingLoan) })); return; }
     setSaving(true);
     try {
       await updateSalePayment(editModal.id, editNewPaid);
       setEditModal(null);
       showSuccess(editNewRemain === 0
-        ? `✓ Loan fully settled for ${editModal.customerName}`
-        : `✓ Payment recorded — $${fmt(editNewRemain)} still outstanding`);
+        ? t('loans.settledToast', { name: editModal.customerName })
+        : t('loans.paymentRecordedToast', { amount: fmt(editNewRemain) }));
       await loadLoans();
-    } catch (e) { alert(e.message || 'Failed to save payment.'); }
+    } catch (e) { alert(e.message || t('loans.saveFailedAlert')); }
     finally { setSaving(false); }
   }
 
@@ -341,7 +343,7 @@ export default function Loans({ dark, user }) {
       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--cream)' }}>
       <div style={{ textAlign: 'center' }}>
         <div style={{ width: 34, height: 34, border: '3px solid var(--border)', borderTopColor: 'var(--amber)', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 12px' }} />
-        <p style={{ color: 'var(--ink-faint)', fontSize: 13, fontWeight: 300 }}>Loading loans…</p>
+        <p style={{ color: 'var(--ink-faint)', fontSize: 13, fontWeight: 300 }}>{t('loans.loadingLoans')}</p>
       </div>
     </div>
   );
@@ -352,10 +354,10 @@ export default function Loans({ dark, user }) {
       style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--cream)' }}>
       <div style={{ background: 'var(--card)', border: '1px solid var(--red-border)', borderRadius: 18, padding: 32, textAlign: 'center', maxWidth: 380 }}>
         <XCircle size={38} style={{ color: 'var(--red-text)', marginBottom: 12 }} />
-        <div className="abk-serif" style={{ fontSize: 16, fontWeight: 500, color: 'var(--ink)', marginBottom: 6 }}>Connection Error</div>
+        <div className="abk-serif" style={{ fontSize: 16, fontWeight: 500, color: 'var(--ink)', marginBottom: 6 }}>{t('loans.connectionError')}</div>
         <p style={{ color: 'var(--ink-faint)', fontSize: 12, marginBottom: 16 }}>{error}</p>
         <button onClick={loadLoans} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '8px 18px', background: 'var(--amber)', color: '#fff', border: 'none', borderRadius: 10, fontSize: 13, cursor: 'pointer' }}>
-          <RefreshCw size={13} /> Retry
+          <RefreshCw size={13} /> {t('loans.retry')}
         </button>
       </div>
     </div>
@@ -388,13 +390,13 @@ export default function Loans({ dark, user }) {
           <div>
             <div style={{ fontSize: 10.5, fontWeight: 500, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-light)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
               <span style={{ display: 'inline-block', width: 18, height: 1.5, background: 'var(--amber)', borderRadius: 1 }} />
-              Loans
+              {t('loans.eyebrow')}
             </div>
             <div className="abk-serif" style={{ fontSize: 28, fontWeight: 500, color: 'var(--ink)', letterSpacing: -0.5, lineHeight: 1.1 }}>
-              Loan Tracker
+              {t('loans.title')}
             </div>
             <div style={{ fontSize: 12, color: 'var(--ink-faint)', marginTop: 4, fontWeight: 300 }}>
-              Partial and unpaid sales — track repayments
+              {t('loans.subtitle')}
             </div>
           </div>
 
@@ -407,27 +409,27 @@ export default function Loans({ dark, user }) {
             onMouseEnter={e => e.currentTarget.style.background = 'var(--cream-deep)'}
             onMouseLeave={e => e.currentTarget.style.background = 'var(--card)'}
           >
-            <RefreshCw size={12} /> Refresh
+            <RefreshCw size={12} /> {t('loans.refresh')}
           </button>
         </div>
 
         {/* ── KPI Cards ─────────────────────────────────────────────────── */}
         <div className="abk-loans-kpi" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 10, marginBottom: '1.1rem' }}>
           <KpiCard
-            label="Total Outstanding" value={`$${fmt(totalOutstanding)}`}
-            sub={`${loans.length} open loan${loans.length !== 1 ? 's' : ''}`}
+            label={t('loans.totalOutstanding')} value={`$${fmt(totalOutstanding)}`}
+            sub={t('loans.openLoansCount', { count: loans.length })}
             Icon={Landmark} stripeColor="var(--amber)" iconBg="var(--amber-bg)" iconColor="var(--amber)"
             progPct={totalSaleValue > 0 ? Math.round((totalOutstanding / totalSaleValue) * 100) : 2} delay=".06s"
           />
           <KpiCard
-            label="Collected So Far" value={`$${fmt(totalCollected)}`}
-            sub="Partial payments received"
+            label={t('loans.collectedSoFar')} value={`$${fmt(totalCollected)}`}
+            sub={t('loans.partialPaymentsReceived')}
             Icon={CheckCircle} stripeColor="var(--green)" iconBg="var(--green-bg)" iconColor="var(--green)"
             progPct={totalSaleValue > 0 ? Math.round((totalCollected / totalSaleValue) * 100) : 2} delay=".13s"
           />
           <KpiCard
-            label="Total Loan Value" value={`$${fmt(totalSaleValue)}`}
-            sub="Combined sale totals"
+            label={t('loans.totalLoanValue')} value={`$${fmt(totalSaleValue)}`}
+            sub={t('loans.combinedSaleTotals')}
             Icon={Landmark} stripeColor="var(--blue)" iconBg="var(--blue-bg)" iconColor="var(--blue)"
             progPct={82} delay=".20s"
           />
@@ -438,7 +440,7 @@ export default function Loans({ dark, user }) {
           <div style={{ flex: 1, position: 'relative' }}>
             <Search size={14} style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', color: 'var(--ink-faint)', pointerEvents: 'none' }} />
             <input value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
-              placeholder="Search by customer or product…" className="abk-input" style={{ paddingLeft: 34 }} />
+              placeholder={t('loans.searchPlaceholder')} className="abk-input" style={{ paddingLeft: 34 }} />
           </div>
           <div style={{ position: 'relative' }}>
             <Calendar size={13} style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', color: 'var(--ink-faint)', pointerEvents: 'none' }} />
@@ -451,7 +453,7 @@ export default function Loans({ dark, user }) {
               background: 'var(--red-bg)', border: '1px solid var(--red-border)',
               borderRadius: 10, color: 'var(--red-text)', fontSize: 12, cursor: 'pointer', fontFamily: 'DM Sans,sans-serif',
             }}>
-              <X size={12} /> Clear
+              <X size={12} /> {t('loans.clear')}
             </button>
           )}
         </div>
@@ -468,14 +470,14 @@ export default function Loans({ dark, user }) {
             background: 'var(--cream-deep)', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             borderRadius: '16px 16px 0 0',
           }}>
-            <div className="abk-serif" style={{ fontSize: 14, fontWeight: 500, color: 'var(--ink)' }}>Open Loans</div>
+            <div className="abk-serif" style={{ fontSize: 14, fontWeight: 500, color: 'var(--ink)' }}>{t('loans.openLoans')}</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               {(search || dateFilter) && (
                 <span style={{ fontSize: 11, color: 'var(--amber)', fontWeight: 600 }}>
-                  Outstanding: ${fmt(filtered.reduce((a, s) => a + (s.remainingLoan ?? 0), 0))}
+                  {t('loans.outstandingColon')} ${fmt(filtered.reduce((a, s) => a + (s.remainingLoan ?? 0), 0))}
                 </span>
               )}
-              <span style={{ fontSize: 11, color: 'var(--ink-faint)', fontWeight: 300 }}>{filtered.length} records</span>
+              <span style={{ fontSize: 11, color: 'var(--ink-faint)', fontWeight: 300 }}>{filtered.length} {t('loans.records')}</span>
             </div>
           </div>
 
@@ -483,7 +485,7 @@ export default function Loans({ dark, user }) {
             <table style={{ width: '100%', minWidth: 'max-content', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ background: 'var(--cream-deep)', borderBottom: '1px solid var(--border)' }}>
-                  {['Customer', 'Sale Details', 'Total', 'Paid', 'Remaining', 'Date', 'Actions'].map(h => (
+                  {[t('loans.customer'), t('loans.saleDetails'), t('loans.total'), t('loans.paid'), t('loans.remaining'), t('loans.date'), t('loans.actions')].map(h => (
                     <th key={h} style={{ padding: '10px 14px', textAlign: 'left', fontSize: 10, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--ink-light)', whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
@@ -494,7 +496,7 @@ export default function Loans({ dark, user }) {
                     <td colSpan={7} style={{ textAlign: 'center', padding: '3.5rem 0' }}>
                       <Landmark size={34} style={{ color: 'var(--border)', margin: '0 auto 10px', display: 'block' }} />
                       <p style={{ color: 'var(--ink-faint)', fontSize: 13, fontWeight: 300 }}>
-                        {search || dateFilter ? 'No loans match your filter.' : 'No open loans — all sales are fully paid! 🎉'}
+                        {search || dateFilter ? t('loans.noLoansFilter') : t('loans.noLoansEmpty')}
                       </p>
                     </td>
                   </tr>
@@ -506,7 +508,7 @@ export default function Loans({ dark, user }) {
                       {/* Customer */}
                       <td style={{ padding: '12px 14px' }}>
                         <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{s.customerName || '—'}</div>
-                        <div style={{ fontSize: 10.5, color: 'var(--ink-faint)', marginTop: 2, fontWeight: 300 }}>ID #{s.id}</div>
+                        <div style={{ fontSize: 10.5, color: 'var(--ink-faint)', marginTop: 2, fontWeight: 300 }}>{t('loans.idPrefix')}{s.id}</div>
                       </td>
 
                       {/* Sale Details */}
@@ -514,7 +516,7 @@ export default function Loans({ dark, user }) {
                         <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink)' }}>{s.product?.name || '—'}</div>
                         <div style={{ fontSize: 11, color: 'var(--ink-faint)', marginTop: 2, fontWeight: 300 }}>
                           {s.quantity} × ${fmt(s.price)}
-                          {s.product?.sku && <span style={{ fontFamily: 'monospace', marginLeft: 6 }}>SKU: {s.product.sku}</span>}
+                          {s.product?.sku && <span style={{ fontFamily: 'monospace', marginLeft: 6 }}>{t('loans.skuLabel')} {s.product.sku}</span>}
                         </div>
                       </td>
 
@@ -535,7 +537,7 @@ export default function Loans({ dark, user }) {
                             width: `${pct}%`, transition: 'width .4s ease',
                           }} />
                         </div>
-                        <div style={{ fontSize: 10, color: 'var(--ink-faint)', marginTop: 2 }}>{pct}% paid</div>
+                        <div style={{ fontSize: 10, color: 'var(--ink-faint)', marginTop: 2 }}>{t('loans.percentPaid', { pct })}</div>
                       </td>
 
                       {/* Remaining */}
@@ -548,7 +550,7 @@ export default function Loans({ dark, user }) {
                           <span className="abk-serif" style={{ fontSize: 14, fontWeight: 700, color: 'var(--amber)' }}>
                             ${fmt(s.remainingLoan)}
                           </span>
-                          <span style={{ fontSize: 9.5, color: 'var(--amber)', fontWeight: 400, marginTop: 1 }}>outstanding</span>
+                          <span style={{ fontSize: 9.5, color: 'var(--amber)', fontWeight: 400, marginTop: 1 }}>{t('loans.outstandingBadge')}</span>
                         </div>
                       </td>
 
@@ -561,7 +563,7 @@ export default function Loans({ dark, user }) {
                       <td style={{ padding: '12px 14px' }}>
                         <div style={{ display: 'flex', gap: 7 }}>
                           {/* Record payment */}
-                          <button onClick={() => openEdit(s)} title="Record payment" style={{
+                          <button onClick={() => openEdit(s)} title={t('loans.recordPaymentTooltip')} style={{
                             width: 30, height: 30, borderRadius: 8,
                             border: '1px solid var(--yellow-border)',
                             background: 'var(--amber-bg)', color: 'var(--amber)',
@@ -589,7 +591,7 @@ export default function Loans({ dark, user }) {
             background: 'var(--cream-deep)',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--ink-faint)', fontWeight: 300 }}>
-              <span>Rows:</span>
+              <span>{t('loans.rows')}</span>
               {[10, 20, 50].map(n => (
                 <button key={n} onClick={() => { setRowsPerPage(n); setPage(1); }} style={{
                   padding: '2px 9px', borderRadius: 7, fontSize: 11, fontWeight: 500, cursor: 'pointer',
@@ -622,7 +624,7 @@ export default function Loans({ dark, user }) {
         {editModal && (
           <Modal onClose={() => setEditModal(null)} maxWidth={440}>
             <ModalHeader
-              title="Record Payment"
+              title={t('loans.recordPayment')}
               subtitle={`${editModal.customerName} · ${editModal.product?.name}`}
               onClose={() => setEditModal(null)}
               accent="var(--amber)"
@@ -633,9 +635,9 @@ export default function Loans({ dark, user }) {
               {/* Loan summary */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
                 {[
-                  { label: 'Sale Total', val: `$${fmt(editTotal)}`, color: 'var(--ink-mid)' },
-                  { label: 'Paid So Far', val: `$${fmt(editCurrentPaid)}`, color: 'var(--green)' },
-                  { label: 'Outstanding', val: `$${fmt(editModal.remainingLoan)}`, color: 'var(--amber)' },
+                  { label: t('loans.saleTotal'), val: `$${fmt(editTotal)}`, color: 'var(--ink-mid)' },
+                  { label: t('loans.paidSoFar'), val: `$${fmt(editCurrentPaid)}`, color: 'var(--green)' },
+                  { label: t('loans.outstanding'), val: `$${fmt(editModal.remainingLoan)}`, color: 'var(--amber)' },
                 ].map(item => (
                   <div key={item.label} style={{
                     background: 'var(--cream-deep)', border: '1px solid var(--border)',
@@ -649,7 +651,7 @@ export default function Loans({ dark, user }) {
 
               {/* Additional payment input */}
               <div>
-                <label className="abk-label">Amount Being Paid Now</label>
+                <label className="abk-label">{t('loans.amountBeingPaidNow')}</label>
                 <div style={{ position: 'relative' }}>
                   <span style={{
                     position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)',
@@ -669,20 +671,20 @@ export default function Loans({ dark, user }) {
                 {editInvalid && (
                   <div style={{ fontSize: 11, color: 'var(--red-text)', marginTop: 4, display: 'flex', alignItems: 'center', gap: 3 }}>
                     <XCircle size={11} />
-                    {editAddAmt < 0 ? 'Cannot be negative.' : `Cannot exceed outstanding balance of $${fmt(editModal.remainingLoan)}.`}
+                    {editAddAmt < 0 ? t('loans.cannotBeNegative') : t('loans.cannotExceed', { amount: fmt(editModal.remainingLoan) })}
                   </div>
                 )}
               </div>
 
               {/* Quick-pay buttons: 25%, 50%, Pay Full */}
               <div>
-                <div style={{ fontSize: 10.5, color: 'var(--ink-faint)', marginBottom: 6, fontWeight: 400 }}>Quick pay:</div>
+                <div style={{ fontSize: 10.5, color: 'var(--ink-faint)', marginBottom: 6, fontWeight: 400 }}>{t('loans.quickPay')}</div>
                 <div style={{ display: 'flex', gap: 6 }}>
                   {[
                     { label: '25%', val: editModal.remainingLoan * 0.25 },
                     { label: '50%', val: editModal.remainingLoan * 0.50 },
                     { label: '75%', val: editModal.remainingLoan * 0.75 },
-                    { label: 'Pay Full', val: editModal.remainingLoan },
+                    { label: t('loans.payFull'), val: editModal.remainingLoan },
                   ].map(q => (
                     <button key={q.label} onClick={() => setAdditionalPay(q.val.toFixed(2))} style={{
                       flex: 1, padding: '6px 0', borderRadius: 9, fontSize: 11, fontWeight: 600,
@@ -708,10 +710,10 @@ export default function Loans({ dark, user }) {
                 }}>
                   <div>
                     <div style={{ fontSize: 11, fontWeight: 500, color: editNewRemain === 0 ? 'var(--green)' : 'var(--amber)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                      {editNewRemain === 0 ? '🎉 Fully Settled!' : 'Remaining after payment'}
+                      {editNewRemain === 0 ? t('loans.fullySettled') : t('loans.remainingAfterPayment')}
                     </div>
                     <div style={{ fontSize: 10.5, color: 'var(--ink-faint)', marginTop: 2, fontWeight: 300 }}>
-                      ${fmt(editCurrentPaid)} + ${fmt(editAddAmt)} = ${fmt(editNewPaid)} paid
+                      {t('loans.paidBreakdown', { current: fmt(editCurrentPaid), add: fmt(editAddAmt), newPaid: fmt(editNewPaid) })}
                     </div>
                   </div>
                   <div className="abk-serif" style={{ fontSize: 22, fontWeight: 700, color: editNewRemain === 0 ? 'var(--green)' : 'var(--amber)' }}>
@@ -722,11 +724,11 @@ export default function Loans({ dark, user }) {
             </div>
 
             <div style={{ display: 'flex', gap: 10, padding: '1rem 1.4rem', borderTop: '1px solid var(--border-light)' }}>
-              <BtnSecondary onClick={() => setEditModal(null)}>Cancel</BtnSecondary>
+              <BtnSecondary onClick={() => setEditModal(null)}>{t('loans.cancel')}</BtnSecondary>
               <BtnPrimary onClick={handleSavePayment} disabled={saving || editAddAmt <= 0 || editInvalid}>
                 {saving
-                  ? <><RefreshCw size={13} style={{ animation: 'spin 1s linear infinite' }} /> Saving…</>
-                  : <><CheckCircle size={13} /> Save Payment</>}
+                  ? <><RefreshCw size={13} style={{ animation: 'spin 1s linear infinite' }} /> {t('loans.saving')}</>
+                  : <><CheckCircle size={13} /> {t('loans.savePayment')}</>}
               </BtnPrimary>
             </div>
           </Modal>
