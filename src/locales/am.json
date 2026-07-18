@@ -424,7 +424,9 @@
     "typeAdded": "ክምችት ታከለ",
     "typeAdjustment": "ማስተካከያ",
     "typeReturn": "መመለሻ",
-    "typeDiscard": "ተጣለ"
+    "typeDiscard": "ተጣለ",
+    "errorTitle": "የግንኙነት ስህተት",
+    "errorConnect": "የክምችት ታሪክ መጫን አልተቻለም። Spring Boot በፖርት 8080 ላይ መሥራቱን ያረጋግጡ።"
   },
   "users": {
     "title": "ተጠቃሚ አስተዳደር",

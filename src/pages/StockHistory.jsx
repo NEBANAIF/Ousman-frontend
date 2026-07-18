@@ -200,7 +200,7 @@ export default function StockHistory({ dark: darkProp }) {
     try {
       const data = await getStockHistory();
       setHistory(data);
-    } catch { setError(t('sales.errorConnect')); }
+    } catch { setError(t('stock.errorConnect')); }
     finally   { setLoading(false); }
   }
 
@@ -265,7 +265,7 @@ export default function StockHistory({ dark: darkProp }) {
     <div className={`abk-dash${dark ? ' abk-dark' : ''}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--cream)' }}>
       <div style={{ background: 'var(--card)', border: '1px solid var(--red-border)', borderRadius: 14, padding: '2rem', textAlign: 'center', maxWidth: 340 }}>
         <XCircle size={36} style={{ color: 'var(--red-text)', margin: '0 auto 12px' }} />
-        <p className="abk-serif" style={{ color: 'var(--red-text)', fontWeight: 500, marginBottom: 6, fontSize: 16 }}>{t('sales.errorTitle')}</p>
+        <p className="abk-serif" style={{ color: 'var(--red-text)', fontWeight: 500, marginBottom: 6, fontSize: 16 }}>{t('stock.errorTitle')}</p>
         <p style={{ color: 'var(--ink-faint)', fontSize: 12, marginBottom: 16, fontWeight: 300 }}>{error}</p>
         <button onClick={load} style={{
           padding: '7px 18px', background: 'var(--green)', color: '#fff',

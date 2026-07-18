@@ -260,7 +260,16 @@
     "saleDetails": "Enter sale details",
     "stockRestoreNote": "Stock will be restored to its previous amount.",
     "saleOf": "Sale of",
-    "on": "on"
+    "on": "on",
+    "alertFields": "Please enter product, quantity and price.",
+    "loading": "Loading sales...",
+    "errorTitle": "Connection Error",
+    "errorConnect": "Could not connect to the server. Make sure Spring Boot is running on port 8080.",
+    "tryAgain": "Try Again",
+    "successRecord": "Sale recorded!",
+    "successDelete": "Sale deleted. Stock restored.",
+    "errorRecord": "Could not record sale.",
+    "errorDelete": "Could not delete sale."
   },
   "finance": {
     "title": "Finance",
@@ -416,7 +425,9 @@
     "typeAdded": "Stock Added",
     "typeAdjustment": "Adjustment",
     "typeReturn": "Return",
-    "typeDiscard": "Discarded"
+    "typeDiscard": "Discarded",
+    "errorTitle": "Connection Error",
+    "errorConnect": "Could not load stock history. Make sure Spring Boot is running on port 8080."
   },
   "users": {
     "title": "User Management",
