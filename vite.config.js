@@ -17,9 +17,9 @@ export default defineConfig({
       includeAssets: ['favicon.svg', 'icons.svg', 'stocks.jpg', 'apple-touch-icon.png'],
 
       manifest: {
-        name: 'Neba ERP',
-        short_name: 'Neba ERP',
-        description: 'Inventory, sales, and finance management for Neba ERP',
+        name: 'Ousman ERP',
+        short_name: 'Ousman ERP',
+        description: 'Inventory, sales, and finance management for Ousman ERP',
         theme_color: '#0F1F04',
         background_color: '#F0F7E2',
         display: 'standalone',

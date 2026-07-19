@@ -48,7 +48,7 @@
     "contactAdmin": "ለመጠቀም አስተዳዳሪን ያነጋግሩ"
   },
   "dashboard": {
-    "erpSubtitle": "Neba ERP · የችርቻሮ ሥራ",
+    "erpSubtitle": "Ousman ERP · የችርቻሮ ሥራ",
     "adminName": "አስተዳዳሪ",
     "live": "ቀጥታ",
     "salesToday": "የዛሬ ሽያጮች",
@@ -88,7 +88,7 @@
     "systemLog": "የሥርዓት ምዝገባ",
     "noActivity": "ምንም እንቅስቃሴ የለም",
     "whatErpDoes": "ይህ ERP ምን ያደርጋል",
-    "erpDescription": "Neba ለሚያድጉ ንግዶች የተሰራ ሙሉ የችርቻሮ አስተዳደር ሥርዓት ነው። ከዚህ በታች ያለው ሁሉ ቀጥታ ሆኖ ተያይዟል — ምንም ተጨማሪ ቅንብር አያስፈልግም።",
+    "erpDescription": "Ousman ለሚያድጉ ንግዶች የተሰራ ሙሉ የችርቻሮ አስተዳደር ሥርዓት ነው። ከዚህ በታች ያለው ሁሉ ቀጥታ ሆኖ ተያይዟል — ምንም ተጨማሪ ቅንብር አያስፈልግም።",
     "erpFooter": "ሁሉም ባህሪያት ቀጥታ ሆነዋል። ጠቃሚ ይሆናል ብለን ተስፋ እናደርጋለን።",
     "financeTitle": "የፋይናንስ ገጽ",
     "financeBadge": "ውስጠ-ሥርዓት",
@@ -481,7 +481,7 @@
     "languageDesc": "የሚፈልጉትን ቋንቋ ምረጡ",
     "helpTitle": "እርዳታ እና ድጋፍ",
     "helpDesc": "እርዳታ ይፈልጋሉ? ስርዓት አስተዳዳሪዎን ያነጋግሩ።",
-    "version": "Neba ERP v1.0",
+    "version": "Ousman ERP v1.0",
     "builtWith": "Spring Boot + React ፕሮጀክት"
   }
 }

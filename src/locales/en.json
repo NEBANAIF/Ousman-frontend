@@ -48,7 +48,7 @@
     "contactAdmin": "Contact an administrator to gain access"
   },
   "dashboard": {
-    "erpSubtitle": "Neba ERP · Retail Operations",
+    "erpSubtitle": "Ousman ERP · Retail Operations",
     "adminName": "Admin",
     "live": "Live",
     "salesToday": "Sales Today",
@@ -88,7 +88,7 @@
     "systemLog": "System log",
     "noActivity": "No activity yet",
     "whatErpDoes": "What This ERP Does",
-    "erpDescription": "Neba is a complete retail management system built for growing businesses. Everything below is already live and connected — no extra setup needed.",
+    "erpDescription": "Ousman is a complete retail management system built for growing businesses. Everything below is already live and connected — no extra setup needed.",
     "erpFooter": "All features are live and connected. We hope it is helpful.",
     "financeTitle": "Finance Page",
     "financeBadge": "Built-in",
@@ -483,7 +483,7 @@
     "languageDesc": "Select your preferred language",
     "helpTitle": "Help & Support",
     "helpDesc": "Need help? Contact your system administrator.",
-    "version": "Neba ERP v1.0",
+    "version": "Ousman ERP v1.0",
     "builtWith": "Spring Boot + React Project"
   }
 }

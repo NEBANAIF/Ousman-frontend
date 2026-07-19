@@ -80,7 +80,7 @@ export default function Sidebar({ current, setCurrent, user, onLogout, dark, onD
               fontFamily: "'Playfair Display', serif",
               color: dark ? '#58A6FF' : '#F0F7E2',
               fontWeight: 600, fontSize: 16, fontStyle: 'italic',
-            }}>N</span>
+            }}>O</span>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{
@@ -88,7 +88,7 @@ export default function Sidebar({ current, setCurrent, user, onLogout, dark, onD
               fontSize: 15, fontWeight: 500,
               color: dark ? '#E6EDF3' : '#F0F7E2',
               letterSpacing: -0.3, lineHeight: 1.2,
-            }}>Neba ERP</div>
+            }}>Ousman ERP</div>
             <div style={{
               fontSize: 10, fontWeight: 300, marginTop: 1,
               color: dark ? '#5A7A96' : '#A8C080',
