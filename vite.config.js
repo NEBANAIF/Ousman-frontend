@@ -21,7 +21,7 @@ export default defineConfig({
         short_name: 'Ousman ERP',
         description: 'Inventory, sales, and finance management for Ousman ERP',
         theme_color: '#0F1F04',
-        background_color: '#F0F7E2',
+        background_color: '#fbfcfb',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/',
